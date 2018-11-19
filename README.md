@@ -2,4 +2,4 @@
 
 Requiere parcel
 
-parcel index.html
+  parcel index.html
