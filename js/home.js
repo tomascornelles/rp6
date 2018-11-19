@@ -1,6 +1,6 @@
 export const homeApp = () => {
-  var firebase = require("firebase/app");
-  require("firebase/database");
+  var firebase = require('firebase/app')
+  require('firebase/database')
   // Initialize Firebase
   var config = {
     apiKey: 'AIzaSyA5OHxB6Q8bcoRu5RpzwpZ6wJctJafSzDQ',
@@ -26,22 +26,22 @@ export const homeApp = () => {
     })
     document.querySelector('.js-page-home').style.display = 'block'
   }
-  
-  const _listPJs = () => {      
+
+  const _listPJs = () => {
     database.ref('characters').on('value', function (snapshot) {
       let pjs = snapshot.val()
       let _container = document.querySelector('.js-grid')
       _container.innerHTML = ''
 
       for (let key in pjs) {
-        if (pjs[key].token === '') {  
+        if (pjs[key].token === '') {
           _loadPJ(key)
         }
       }
 
       let more = document.querySelectorAll('.js-more-pj')
       more.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
           let _template = document.querySelectorAll('.js-template')
           if (this.parentNode.parentNode.classList.contains('big')) {
             _template.forEach(item => {
@@ -78,66 +78,52 @@ export const homeApp = () => {
       // _setToken(pj)
       let _template = document.createElement('div')
       _template.classList.add('js-template')
-      let _img = document.createElement('div')
-      _img.classList.add('img')
-      _img.innerHTML = `<img src="img/${pj}.png" alt="_pj.name"></img>`
-      _template.append(_img)
-      let _more = document.createElement('div')
-      _more.classList.add('more')
-      _more.innerHTML = `<button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button>`
-      _template.append(_more)
-      let _name = document.createElement('div')
-      _name.classList.add('name')
-      _name.innerHTML = `<h4>${_pj.name}</h4>`
-      _template.append(_name)
-      let _class = document.createElement('div')
-      _class.classList.add('class')
-      _class.innerHTML = `<p>${_pj.class}</p>`
-      _template.append(_class)
-      let _race = document.createElement('div')
-      _race.classList.add('race')
-      _race.innerHTML = `<p>${_pj.race}</p>`
-      _template.append(_race)
-      let _link = document.createElement('div')
-      _link.classList.add('link')
-      _link.innerHTML = `<a href="${pj}" class="js-select-pj button" data-pj="${pj}">Escoger</a>`
-      _template.append(_link)
-      let _table = document.createElement('div')
-      _table.classList.add('table')
-      _table.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Fuerza</th>
-            <th>Mente</th>
-            <th>Defensa</th>
-            <th>Vida</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>${_pj.force}</td>
-            <td>${_pj.mind}</td>
-            <td>${_printDefense()}</td>
-            <td>${_pj.pv}</td>
-          </tr>
-        </tbody>
-      </table>`
-      _template.append(_table)
-      let _skills = document.createElement('div')
-      _skills.classList.add('skills')
-      _skills.innerHTML = `<h5>Habilidades</h5>${_printSkills()}`
-      _template.append(_skills)
-      let _items = document.createElement('div')
-      _items.classList.add('items')
-      _items.innerHTML = `<h5>Equipamiento</h5>${_printItems()}`
-      _template.append(_items)
+      _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+        <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
+        <div class="name">
+          <h4>${_pj.name}</h4>
+        </div>
+        <div class="class">
+          <p>${_pj.class}</p>
+        </div>
+        <div class="race">
+          <p>${_pj.race}</p>
+        </div>
+        <div class="link">
+          <a href="${pj}" class="js-select-pj button" data-pj="${pj}">Escoger</a>
+        </div>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>Fuerza</th>
+                <th>Mente</th>
+                <th>Defensa</th>
+                <th>Vida</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${_pj.force}</td>
+                <td>${_pj.mind}</td>
+                <td>${_printDefense()}</td>
+                <td>${_pj.pv}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="skills">
+          <h5>Habilidades</h5>${_printSkills()}
+        </div>
+        <div class="items">
+          <h5>Equipamiento</h5>${_printItems()}
+        </div>`
 
       let _container = document.querySelector('.js-grid')
-      _container.append(_template)
+      _container.appendChild(_template)
     })
   }
-  
+
   const _printDefense = () => {
     let items = _pj.items.split(',')
     let defOut = 1
@@ -157,10 +143,10 @@ export const homeApp = () => {
       for (let i = 0; i < skills.length; i++) {
         let skill = _skills[skills[i].trim()]
         let print = ''
-        print += (skill.def !== '') ? '<strong>Activación:</strong> ' + skill.activation  + '<br>': ''
+        print += (skill.def !== '') ? '<strong>Activación:</strong> ' + skill.activation + '<br>' : ''
         print += (skill.dmg !== '') ? '<strong>Coste:</strong> ' + skill.cost + '<br>' : ''
         print += (skill.range !== '') ? '<strong>Descripción:</strong> \n' + skill.description + '<br>' : ''
-        
+
         skillsout += '<div class="js-info"><input type="checkbox" name="skills" id="skill-' + skills[i] + '"><label class="js-info-link" for="skill-' + skills[i] + '">' + skill.name + '</label><div class="js-info-text">' + print + '</div></div>'
       }
     }
@@ -177,13 +163,12 @@ export const homeApp = () => {
         print += (item.def !== '') ? '<strong>Defensa:</strong> +' + item.def + '<br>' : ''
         print += (item.dmg !== '') ? '<strong>Daño:</strong> ' + item.dmg + '<br>' : ''
         print += (item.range !== '') ? '<strong>Alcance:</strong> ' + item.range + '<br>' : ''
-        print += (item.hands !== '') 
-          ? (item.hands === '1') 
+        print += (item.hands !== '')
+          ? (item.hands === '1')
             ? '1 mano'
             : '2 manos'
           : ''
         itemsout += '<div class="js-info"><input type="checkbox" name="items" id="item-' + items[i] + '"><label class="js-info-link" for="item-' + items[i] + '">' + item.name + '</label><div class="js-info-text">' + print + '</div></div>'
-        
       }
     }
     return itemsout
