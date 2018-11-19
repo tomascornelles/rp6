@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "node-sass": "^4.10.0"
+  },
+  "dependencies": {
+    "firebase": "^5.5.8",
+    "page": "^1.11.3"
+  }
+}

@@ -5,13 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>RP6 - tablero</title>
-  <link rel="stylesheet" href="scss/pjs.scss">
+  <link rel="stylesheet" href="sass/app.sass">
 </head>
 <body>
-  <div class="rp6App">
-    <div class="chat js-chat"></div>
-    <div class="js-sheet-pj grid"></div>
+
+  <div class="pages">
+    <div class="page home js-page-home">
+      <div class="grid js-grid"></div>
+    </div>
+
+    <div class="page pj js-page-pj">
+      <div class="chat js-chat"></div>
+      <div class="sheet">
+        <a href="./" class="button js-salir">Salir</a>
+        <div class="js-sheet"></div>
+      </div>
+    </div>
   </div>
-  <script src="js/main.js"></script>
+  
+  <script src="js/app.js"></script>
 </body>
 </html>
