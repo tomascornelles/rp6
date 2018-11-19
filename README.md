@@ -2,4 +2,6 @@
 
 Requiere parcel
 
-  parcel index.html
+```bash
+$ parcel index.html
+```
