@@ -37,10 +37,6 @@ export const homeApp = () => {
     _container.innerHTML = ''
 
     for (let key in pjs) {
-      if (_data.characters[key].token !== '' && _data.characters[key].token == localStorage.getItem(key)) {
-        console.log('entra')
-        _setToken(key, '')
-      }
       _loadPJ(key)
     }
 
@@ -62,12 +58,6 @@ export const homeApp = () => {
         }
       }, false)
     })
-  }
-
-  const _setToken = (pj) => {
-    console.log('entra')
-    let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'token': '' }).then(localStorage.removeItem(pj))
   }
 
   const _loadPJ = (pj) => {

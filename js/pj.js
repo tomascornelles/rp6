@@ -19,8 +19,8 @@ export const pjApp = (response) => {
 
     database.ref('/').on('value', function (snapshot) {
       _data = snapshot.val()
-      _skills = _data.skills
       _items = _data.items
+      _skills = _data.skills
       if (_data.characters[pj].token === '') {
         _setToken(pj, Date.parse(Date()))
         _loadPJ(pj)
