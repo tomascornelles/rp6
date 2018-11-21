@@ -1,7 +1,11 @@
 @import 'milligram'
 .hidden
   display: none
-  
+
+.flex
+  display: flex
+  align-items: flex-end
+
 .grid
   max-width: 600px
   margin: auto
@@ -145,7 +149,7 @@
     .img
       height: 32px
       width: auto
-.pj
+.page
   article
     display: flex
     align-items: stretch
@@ -163,6 +167,12 @@
 
   input[type=text]
     background: #fff
+    font-size: 1.5rem
+
+  textarea
+    background: #fff
+    font-size: 1.5rem
+    height: 10em
   
   .messages
 
@@ -180,6 +190,19 @@
       float: right
       border-right: .5em solid #fff
       border-left: 0
+
+
+    p.dm 
+      border: 3px dashed #ccc
+      background: #fff
+      color: #000
+      width: 90%
+      margin-left: 10%
+      margin-right: 10%
+      padding: 1em
+
+      strong
+        display: none
 
 .sheet
   width: 25%
@@ -364,3 +387,27 @@
       color: #fff
       padding: 0.5em
   
+
+.dm 
+  .chat
+    width: 75%
+
+@media (max-width: 1023px)
+  .page
+    article
+      flex-direction: column
+      
+      & > div
+        width: 100%
+        height: auto
+      
+      .list
+        order: 3
+      
+      .chat
+        order: 1
+        max-height: 60vh
+      
+      .sheet
+        order: 2
+        max-width: 100%

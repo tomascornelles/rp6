@@ -27,7 +27,7 @@ export const homeApp = () => {
       pages.forEach(page => {
         page.style.display = 'none'
       })
-      document.querySelector('.js-page-home').style.display = 'flex'
+      document.querySelector('.js-page-home').style.display = 'block'
     })
   }
 

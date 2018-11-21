@@ -1,9 +1,9 @@
-export const pjApp = (response) => {
+export const dmApp = (response) => {
   var firebase = require('firebase/app')
   let _pj = {}
   let _skills, _items, _data
 
-  const _init = (pj) => {
+  const _init = () => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
@@ -22,24 +22,14 @@ export const pjApp = (response) => {
       _items = _data.items
       _skills = _data.skills
       
-      if (_data.characters[pj].token === '') {
-        _setToken(pj, Date.parse(Date()))
-        _loadPJ(pj)
-        _listPJs()
-        _chatDraw(_data.characters[pj].name)
-      } else if (_data.characters[pj].token == sessionStorage.getItem(pj)) {
-        _loadPJ(pj)
-        _listPJs()
-        _chatDraw(_data.characters[pj].name)
-      } else {
-        window.location.href = "./";
-      }
+      _listPJs()
+      _chatDraw('dm')
 
       let pages = document.querySelectorAll('.page')
       pages.forEach(page => {
         page.style.display = 'none'
       })
-      document.querySelector('.js-page-pj').style.display = 'block'
+      document.querySelector('.js-page-dm').style.display = 'block'
     })
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
@@ -95,7 +85,7 @@ export const pjApp = (response) => {
 
   const _listPJs = () => {
     let pjs = _data.characters
-    let _container = document.querySelector('.js-list')
+    let _container = document.querySelector('.js-list-dm')
     _container.innerHTML = ''
 
     for (let pj in pjs) {
@@ -162,12 +152,6 @@ export const pjApp = (response) => {
         }
       }, false)
     })
-  }
-
-  const _setToken = (pj, token) => {
-    let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'token': token })
-    sessionStorage.setItem(pj, token)
   }
 
   const _printDefense = () => {
@@ -237,20 +221,17 @@ export const pjApp = (response) => {
   }
 
   const _chatDraw = (pj) => {
-    console.log(pj)
     let chat = _data.chat
-    let container = document.querySelector('.js-chat')
+    let container = document.querySelector('.js-chat-dm')
     let messages = document.createElement('div')
     messages.classList.add('messages')
     container.innerHTML = ''
     for (const id in chat) {
       let p = document.createElement('p')
       if (chat[id].player === 'dm') { p.classList.add('dm') }
-      else if (chat[id].player === pj) {p.classList.add('own')}
-      if (chat[id].player === pj) p.classList.add('own')
       let response = chat[id].text
       let responsePrint = (response.match(/^(http).*(png|gif|jpg)$/gm))
-        ? '<a href="' + response + '" target="_blank"><img src="' + response + '"></a>'
+        ? '<img src="' + response + '">'
         : '<strong>' + chat[id].player + ': </strong>' + response
       p.innerHTML = responsePrint
       messages.prepend(p)
@@ -271,7 +252,7 @@ export const pjApp = (response) => {
         <option value="10">10</option>
       </select>
       <div class="flex">
-        <input type="text" class="js-message" placeholder="Escribe un mensaje">
+        <textarea class="js-message"></textarea>
         <input type="submit" value="Enviar" class="js-send">
       </div>
     </form>`
@@ -303,5 +284,5 @@ export const pjApp = (response) => {
     _chatDraw(pj)
   }
 
-  _init(response.params.pj)
+  _init()
 }
