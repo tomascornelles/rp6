@@ -21,19 +21,28 @@ export const pjApp = (response) => {
       _data = snapshot.val()
       _items = _data.items
       _skills = _data.skills
+      
       if (_data.characters[pj].token === '') {
         _setToken(pj, Date.parse(Date()))
         _loadPJ(pj)
+        _listPJs()
+        _chatDraw(_data.characters[pj])
       } else if (_data.characters[pj].token == sessionStorage.getItem(pj)) {
         _loadPJ(pj)
+        _listPJs()
+        _chatDraw(_data.characters[pj])
+      } else {
+        window.location.href = "./";
       }
 
       let pages = document.querySelectorAll('.page')
       pages.forEach(page => {
         page.style.display = 'none'
       })
-      document.querySelector('.js-page-pj').style.display = 'flex'
+      document.querySelector('.js-page-pj').style.display = 'block'
     })
+
+    // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
   }
 
   const _loadPJ = (pj) => {
@@ -55,10 +64,10 @@ export const pjApp = (response) => {
         <table>
           <thead>
             <tr>
-              <th>Fuerza</th>
-              <th>Mente</th>
-              <th>Defensa</th>
-              <th>Vida</th>
+              <th>Fue</th>
+              <th>Men</th>
+              <th>Def</th>
+              <th>PV</th>
             </tr>
           </thead>
           <tbody>
@@ -76,17 +85,89 @@ export const pjApp = (response) => {
       </div>
       <div class="items">
         <h5>Equipamiento</h5>${_printItems()}
-      </div>`
+      </div>
+      `
 
     let _container = document.querySelector('.js-sheet')
     _container.innerHTML = ''
     _container.append(_template)
   }
 
+  const _listPJs = () => {
+    let pjs = _data.characters
+    let _container = document.querySelector('.js-list')
+    _container.innerHTML = ''
+
+    for (let pj in pjs) {
+      _pj = _data.characters[pj]
+      let _template = document.createElement('div')
+      _template.classList.add('js-template')
+      _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+      <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
+        <div class="name">
+          <h4>${_pj.name}</h4>
+        </div>
+        <div class="class">
+          <p>${_pj.class}</p>
+        </div>
+        <div class="race">
+          <p>${_pj.race}</p>
+          <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
+        </div>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>Fue</th>
+                <th>Men</th>
+                <th>Def</th>
+                <th>PV</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${_pj.force}</td>
+                <td>${_pj.mind}</td>
+                <td>${_printDefense()}</td>
+                <td>${_printPv()} / ${_pj.pv}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="skills">
+          <h5>Habilidades</h5>${_printSkills()}
+        </div>
+        <div class="items">
+          <h5>Equipamiento</h5>${_printItems()}
+        </div>`
+
+      if (_pj.token !== '') _container.append(_template)
+    }
+
+    let more = document.querySelectorAll('.js-more-pj')
+    more.forEach(item => {
+      item.addEventListener('click', function () {
+        let _template = document.querySelectorAll('.js-template')
+        if (this.parentNode.parentNode.classList.contains('big')) {
+          _template.forEach(item => {
+            item.classList.remove('big', 'small')
+          })
+        } else {
+          _template.forEach(item => {
+            item.classList.remove('big')
+            item.classList.add('small')
+            this.parentNode.parentNode.classList.remove('small')
+            this.parentNode.parentNode.classList.add('big')
+          })
+        }
+      }, false)
+    })
+  }
+
   const _setToken = (pj, token) => {
     let database = firebase.database()
     database.ref().child('/characters/' + pj).update({ 'token': token })
-    localStorage.setItem(pj, token)
+    sessionStorage.setItem(pj, token)
   }
 
   const _printDefense = () => {
@@ -108,6 +189,7 @@ export const pjApp = (response) => {
   const _barPv = () => {
     return (parseFloat(_pj.pv) - parseFloat(_pj.dmg)) / parseFloat(_pj.pv) * 100
   }
+
   const _printSkills = () => {
     let skills = _pj.skills.split(',')
     let skillsout = ''
@@ -152,6 +234,70 @@ export const pjApp = (response) => {
       }
     }
     return itemsout
+  }
+
+  const _chatDraw = (pj) => {
+    console.log(pj)
+    let chat = _data.chat
+    let container = document.querySelector('.js-chat')
+    let messages = document.createElement('div')
+    messages.classList.add('messages')
+    container.innerHTML = ''
+    for (const id in chat) {
+      let p = document.createElement('p')
+      if (chat[id].player === pj.name) p.classList.add('own')
+      let response = chat[id].text
+      let responsePrint = (typeof response === 'string') 
+        ? '<small>' + chat[id].player + ': ' + response  + '</small>'
+        : '<small>' + chat[id].player + ': </small>' + response.join().replace(/,/g, '')
+      p.innerHTML = responsePrint
+      messages.prepend(p)
+    }
+    let chatBox = document.createElement('div')
+    chatBox.innerHTML = `<form class="js-form">
+      <select class="js-dices">
+        <option>Lanzar dados</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <input type="text" class="js-message" placeholder="Escribe un mensaje">
+      <input type="submit" value="Enviar" class="js-send">
+    </form>`
+    container.append(chatBox)
+    container.append(messages)
+    document.querySelector('.js-form').addEventListener('submit', function () {
+      let message = document.querySelector('.js-message')
+      saveMessage(pj, message.value)
+    })
+    document.querySelector('.js-dices').addEventListener('change', function () {
+      let dice = document.querySelector('.js-dices').value
+      let throws = []
+      let dices = ['?','?','?','?','?','?']
+      for (let a = 0; a < dice; a++) {
+        let t = Math.floor(Math.random() * 6)
+        throws.push(' [' + t + '] ')
+      }
+      console.log(throws)
+      let message = throws.sort().reverse()
+      saveMessage(pj, message)
+    })
+  }
+  
+  const saveMessage = (pj, m) => {
+    let database = firebase.database()
+    database.ref('chat/message' + Date.parse(Date())).set({
+      "player": pj.name,
+      "text": m
+    });
+    _chatDraw(pj)
   }
 
   _init(response.params.pj)

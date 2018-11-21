@@ -64,7 +64,11 @@ export const homeApp = () => {
     _pj = _data.characters[pj]
     let _template = document.createElement('div')
     _template.classList.add('js-template')
-    if (_pj.token !== '') _template.classList.add('used')
+    if (_pj.token !== '' && _pj.token == sessionStorage.getItem(pj)) {
+      _template.classList.add('own')
+    } else if (_pj.token !== '') {
+      _template.classList.add('used')
+    }
     _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
       <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
       <div class="name">
