@@ -7,10 +7,10 @@ export const pjApp = (response) => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: 'AIzaSyA5OHxB6Q8bcoRu5RpzwpZ6wJctJafSzDQ',
-      authDomain: 'rp6-003-test.firebaseapp.com',
-      databaseURL: 'https://rp6-003-test.firebaseio.com',
-      projectId: 'rp6-003-test'
+      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
+      authDomain: "rp6app.firebaseapp.com",
+      databaseURL: "https://rp6app.firebaseio.com",
+      projectId: "rp6app"
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -22,6 +22,7 @@ export const pjApp = (response) => {
       _items = _data.items
       _skills = _data.skills
       
+      console.log(_data)
       if (_data.characters[pj].token === '') {
         _setToken(pj, Date.parse(Date()))
         _loadPJ(pj)
@@ -80,11 +81,14 @@ export const pjApp = (response) => {
           </tbody>
         </table>
       </div>
-      <div class="skills">
-        <h5>Habilidades</h5>${_printSkills()}
+      <div class="skills box">
+        <h5>Habilidades</h5>
+        ${_printSkills()}
       </div>
-      <div class="items">
-        <h5>Equipamiento</h5>${_printItems()}
+      <div class="items box">
+        <h5>Equipamiento</h5>
+        <p>${_pj.mo} mo.</p>
+        ${_printItems()}
       </div>
       `
 
@@ -134,11 +138,14 @@ export const pjApp = (response) => {
             </tbody>
           </table>
         </div>
-        <div class="skills">
-          <h5>Habilidades</h5>${_printSkills()}
+        <div class="skills box">
+          <h5>Habilidades</h5>
+          ${_printSkills()}
         </div>
-        <div class="items">
-          <h5>Equipamiento</h5>${_printItems()}
+        <div class="items box">
+          <h5>Equipamiento</h5>
+          <p>💰 ${_pj.mo} mo.</p>
+          ${_printItems()}
         </div>`
 
       if (_pj.token !== '') _container.append(_template)
@@ -202,8 +209,8 @@ export const pjApp = (response) => {
         print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
 
         skillsout += `<div class="js-info">
-          <input type="checkbox" name="skills" id="skill-${skills[i]}">
-          <label class="js-info-link" for="skill-${skills[i]}">${skill.name}</label>
+          <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
+          <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
           <div class="js-info-text">${print}</div>
         </div>`
       }
@@ -227,8 +234,8 @@ export const pjApp = (response) => {
             : '2 manos'
           : ''
         itemsout += `<div class="js-info">
-          <input type="checkbox" name="items" id="item-${items[i]}">
-          <label class="js-info-link" for="item-${items[i]}">${item.name}</label>
+          <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
+          <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
           <div class="js-info-text">${print}</div>
         </div>`
       }

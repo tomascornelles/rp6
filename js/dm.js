@@ -7,10 +7,10 @@ export const dmApp = (response) => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: 'AIzaSyA5OHxB6Q8bcoRu5RpzwpZ6wJctJafSzDQ',
-      authDomain: 'rp6-003-test.firebaseapp.com',
-      databaseURL: 'https://rp6-003-test.firebaseio.com',
-      projectId: 'rp6-003-test'
+      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
+      authDomain: "rp6app.firebaseapp.com",
+      databaseURL: "https://rp6app.firebaseio.com",
+      projectId: "rp6app"
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -124,11 +124,15 @@ export const dmApp = (response) => {
             </tbody>
           </table>
         </div>
-        <div class="skills">
-          <h5>Habilidades</h5>${_printSkills()}
+        <div class="skills box">
+          <h5>Habilidades</h5>
+          ${_printSkills()}
         </div>
-        <div class="items">
-          <h5>Equipamiento</h5>${_printItems()}
+        <div class="items box">
+          <h5>Equipamiento</h5>
+          <p><img src="img/mo.gif"> ${_pj.mo} mo.</p>
+          ${_printItems(pj)}
+          <div class="js-item-list">${_itemList(pj)}</div>
         </div>`
 
       if (_pj.token !== '') _container.append(_template)
@@ -151,6 +155,20 @@ export const dmApp = (response) => {
           })
         }
       }, false)
+    })
+
+    let itemSelect = document.querySelectorAll('.js-item-select')
+    itemSelect.forEach(item => {
+      item.addEventListener('change', function () {
+        _addItem(this.dataset.pj, this.value)
+      })
+    })
+
+    let itemRemove = document.querySelectorAll('.js-item-remove')
+    itemRemove.forEach(item => {
+      item.addEventListener('click', function () {
+        _removeItem(this.dataset.pj, this.dataset.item)
+      })
     })
   }
 
@@ -186,8 +204,8 @@ export const dmApp = (response) => {
         print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
 
         skillsout += `<div class="js-info">
-          <input type="checkbox" name="skills" id="skill-${skills[i]}">
-          <label class="js-info-link" for="skill-${skills[i]}">${skill.name}</label>
+          <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
+          <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
           <div class="js-info-text">${print}</div>
         </div>`
       }
@@ -195,7 +213,7 @@ export const dmApp = (response) => {
     return skillsout
   }
 
-  const _printItems = () => {
+  const _printItems = (pj) => {
     let items = _pj.items.split(',')
     let itemsout = ''
     if (items[0] !== '') {
@@ -211,13 +229,50 @@ export const dmApp = (response) => {
             : '2 manos'
           : ''
         itemsout += `<div class="js-info">
-          <input type="checkbox" name="items" id="item-${items[i]}">
-          <label class="js-info-link" for="item-${items[i]}">${item.name}</label>
+          <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
+          <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
           <div class="js-info-text">${print}</div>
         </div>`
       }
     }
     return itemsout
+  }
+
+  const _itemList = (pj) => {
+    let select = `<select class="js-item-select" data-pj="${pj}">`
+    select += `<option>Añadir item</option>`
+    for (const item in _items) {
+      if (_items.hasOwnProperty(item)) {
+        const element = _items[item];
+        select += `<option value="${item}">${_items[item].name}</option>`
+      }
+    }
+    select += '</select>'
+    return select
+  }
+
+  const _addItem = (pj, i) => {
+    let items = _data.characters[pj].items
+    if (items === '') {
+      items = i
+    } else {
+      items = items.split(',')
+      items.push(i)
+      items = items.join(',')
+    }
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'items': items })
+  }
+
+  const _removeItem = (pj, i) => {
+    let items = []
+    let items_init = _data.characters[pj].items.split(',')
+    for (let a=0; a < items_init.length; a++) {
+      if (items_init[a] !== i) items.push(items_init[a])
+    }
+    items = items.join(',')
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'items': items })
   }
 
   const _chatDraw = (pj) => {
@@ -252,7 +307,7 @@ export const dmApp = (response) => {
         <option value="10">10</option>
       </select>
       <div class="flex">
-        <textarea class="js-message"></textarea>
+        <input type="text" class="js-message">
         <input type="submit" value="Enviar" class="js-send">
       </div>
     </form>`

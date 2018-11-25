@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "cssnano": "^4.1.7",
     "node-sass": "^4.10.0"
   },
   "dependencies": {
