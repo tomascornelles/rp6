@@ -193,6 +193,12 @@
       clear: both
       border-top: .5em solid #000000
       border-left: .5em solid #fff
+
+      img
+        vertical-align: middle
+
+      .dm-only 
+        display: none
     
     p.own
       float: right
@@ -211,6 +217,7 @@
 
       strong
         display: none
+    
 
 .sheet
   width: 25%
@@ -399,6 +406,31 @@
 .dm 
   .chat
     width: 75%
+
+    .messages p
+      position: relative
+      padding: 1em 4em 1em 1em
+      border: 0
+
+      &.dm 
+        border: 3px dashed #eee
+      
+      .dm-only 
+        display: inline
+
+    .chat-delete
+      position: absolute
+      top: 0
+      right: 0
+      background: #c00
+      color: #fff
+      width: 2em
+      height: 2em
+      line-height: 2em
+      text-align: center
+      cursor: pointer
+      
+
 
 @media (max-width: 1023px)
   .page

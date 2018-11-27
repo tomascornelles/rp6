@@ -275,6 +275,18 @@ export const dmApp = (response) => {
     database.ref().child('/characters/' + pj).update({ 'items': items })
   }
 
+  const _monsterList = (pj) => {
+    let select = `<select class="js-moster-select" data-pj="${pj}">`
+    select += `<option>Añadir criatura</option>`
+    for (const moster in _data.monsters) {
+      if (_data.monsters.hasOwnProperty(moster)) {
+        select += `<option value="${moster}">${_data.monsters[moster].name}</option>`
+      }
+    }
+    select += '</select>'
+    return select
+  }
+
   const _chatDraw = (pj) => {
     let chat = _data.chat
     let container = document.querySelector('.js-chat-dm')
@@ -288,24 +300,29 @@ export const dmApp = (response) => {
       let responsePrint = (response.match(/^(http).*(png|gif|jpg)$/gm))
         ? '<img src="' + response + '">'
         : '<strong>' + chat[id].player + ': </strong>' + response
+      responsePrint += `<a class="js-chat-delete chat-delete" data-id="${id}">✖</a>`
       p.innerHTML = responsePrint
       messages.prepend(p)
     }
     let chatBox = document.createElement('div')
     chatBox.innerHTML = `<form class="js-form">
-      <select class="js-dices">
-        <option>Lanzar dados</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-      </select>
+      <div class="flex">
+        <select class="js-dices">
+          <option>Lanzar dados</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+        ${_itemList()}
+        ${_monsterList()}
+      </div>
       <div class="flex">
         <input type="text" class="js-message">
         <input type="submit" value="Enviar" class="js-send">
@@ -324,10 +341,50 @@ export const dmApp = (response) => {
         let t = Math.ceil(Math.random() * 6)
         throws.push(' [' + t + '] ')
       }
-      console.log(throws)
       let message = throws.sort().reverse()
       saveMessage(pj, message.join(''))
     })
+    document.querySelector('.js-form .js-item-select').addEventListener('change', function () {
+      let item = _items[this.value]
+      let print = ''
+        print += (item.def !== '') ? `<span>Defensa:</span> +${item.def}<br>` : ''
+        print += (item.dmg !== '') ? `<span>Daño:</span> ${item.dmg}<br>` : ''
+        print += (item.range !== '') ? `<span>Alcance:</span> ${item.range}<br>` : ''
+        print += (item.hands !== '')
+          ? (item.hands === '1')
+            ? '1 mano'
+            : '2 manos'
+          : ''
+      let message = `<img src="${item.icon}" width="36">
+        <h3>${item.name}</h3>
+        ${print}`
+      saveMessage(pj, message)
+    })
+    document.querySelector('.js-form .js-moster-select').addEventListener('change', function () {
+      let monster = _data.monsters[this.value]
+      let weapon = _items[monster.weapon]
+      let print = ''
+        print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name}<br>` : ''
+        print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
+        print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
+        print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''
+      let message = `<img src="${monster.icon}" width="36">
+        <h3>${monster.name}</h3>
+        ${print}`
+      saveMessage(pj, message)
+    })
+    let deleteButton = document.querySelectorAll('.js-chat-delete')
+      deleteButton.forEach(button => {
+        button.addEventListener('click', function () {
+          _deleteMessage(pj,this.dataset.id)
+        })
+      })
+  }
+
+  const _deleteMessage = (pj,id) => {
+    let database = firebase.database()
+    database.ref('chat/' + id).remove()
+    _chatDraw(pj)
   }
   
   const saveMessage = (pj, m) => {
