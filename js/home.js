@@ -7,10 +7,10 @@ export const homeApp = () => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
-      authDomain: "rp6app.firebaseapp.com",
-      databaseURL: "https://rp6app.firebaseio.com",
-      projectId: "rp6app"
+      apiKey: 'AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4',
+      authDomain: 'rp6app.firebaseapp.com',
+      databaseURL: 'https://rp6app.firebaseio.com',
+      projectId: 'rp6app'
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)

@@ -130,12 +130,19 @@ export const dmApp = (response) => {
         </div>
         <div class="items box">
           <h5>Equipamiento</h5>
-          <p><img src="img/mo.gif"> ${_pj.mo} mo.</p>
+          <p><span class="js-mo" contenteditable="true">${_pj.mo}</span> mo.</p>
           ${_printItems(pj)}
           <div class="js-item-list">${_itemList(pj)}</div>
         </div>`
 
       if (_pj.token !== '') _container.append(_template)
+      
+      let _mo = document.querySelectorAll('.js-mo')
+      _mo.forEach(item => {
+        item.addEventListener('blur', function () {
+          _setMo(pj, this.innerHTML)
+        })
+      })
     }
 
     let more = document.querySelectorAll('.js-more-pj')
@@ -170,6 +177,11 @@ export const dmApp = (response) => {
         _removeItem(this.dataset.pj, this.dataset.item)
       })
     })
+  }
+
+  const _setMo = (pj, mo) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'mo': mo })
   }
 
   const _printDefense = () => {

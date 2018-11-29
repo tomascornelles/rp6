@@ -7,10 +7,10 @@ export const pjApp = (response) => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
-      authDomain: "rp6app.firebaseapp.com",
-      databaseURL: "https://rp6app.firebaseio.com",
-      projectId: "rp6app"
+      apiKey: 'AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4',
+      authDomain: 'rp6app.firebaseapp.com',
+      databaseURL: 'https://rp6app.firebaseio.com',
+      projectId: 'rp6app'
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -21,19 +21,17 @@ export const pjApp = (response) => {
       _data = snapshot.val()
       _items = _data.items
       _skills = _data.skills
-      
+
       console.log(_data)
       if (_data.characters[pj].token === '') {
         _setToken(pj, Date.parse(Date()))
         _loadPJ(pj)
         _listPJs()
         _chatDraw(_data.characters[pj].name)
-      } else if (_data.characters[pj].token == sessionStorage.getItem(pj)) {
+      } else {
         _loadPJ(pj)
         _listPJs()
         _chatDraw(_data.characters[pj].name)
-      } else {
-        window.location.href = "./";
       }
 
       let pages = document.querySelectorAll('.page')
@@ -87,7 +85,7 @@ export const pjApp = (response) => {
       </div>
       <div class="items box">
         <h5>Equipamiento</h5>
-        <p>${_pj.mo} mo.</p>
+        <p><span class="js-mo editable" contenteditable="true">${_pj.mo}</span> mo.</p>
         ${_printItems()}
       </div>
       `
@@ -95,6 +93,9 @@ export const pjApp = (response) => {
     let _container = document.querySelector('.js-sheet')
     _container.innerHTML = ''
     _container.append(_template)
+    document.querySelector('.js-mo').addEventListener('blur', function () {
+      _setMo(pj, this.innerHTML)
+    })
   }
 
   const _listPJs = () => {
@@ -177,6 +178,11 @@ export const pjApp = (response) => {
     sessionStorage.setItem(pj, token)
   }
 
+  const _setMo = (pj, mo) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'mo': mo })
+  }
+
   const _printDefense = () => {
     let items = _pj.items.split(',')
     let defOut = 1
@@ -246,44 +252,19 @@ export const pjApp = (response) => {
   const _chatDraw = (pj) => {
     console.log(pj)
     let chat = _data.chat
-    let container = document.querySelector('.js-chat')
-    let messages = document.createElement('div')
-    messages.classList.add('messages')
+    let container = document.querySelector('.js-messages')
     container.innerHTML = ''
     for (const id in chat) {
       let p = document.createElement('p')
-      if (chat[id].player === 'dm') { p.classList.add('dm') }
-      else if (chat[id].player === pj) {p.classList.add('own')}
+      if (chat[id].player === 'dm') { p.classList.add('dm') } else if (chat[id].player === pj) { p.classList.add('own') }
       if (chat[id].player === pj) p.classList.add('own')
       let response = chat[id].text
       let responsePrint = (response.match(/^(http).*(png|gif|jpg)$/gm))
         ? '<a href="' + response + '" target="_blank"><img src="' + response + '"></a>'
         : '<strong>' + chat[id].player + ': </strong>' + response
       p.innerHTML = responsePrint
-      messages.prepend(p)
+      container.prepend(p)
     }
-    let chatBox = document.createElement('div')
-    chatBox.innerHTML = `<form class="js-form">
-      <select class="js-dices">
-        <option>Lanzar dados</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-      </select>
-      <div class="flex">
-        <input type="text" class="js-message" placeholder="Escribe un mensaje">
-        <input type="submit" value="Enviar" class="js-send">
-      </div>
-    </form>`
-    container.append(chatBox)
-    container.append(messages)
     document.querySelector('.js-form').addEventListener('submit', function () {
       let message = document.querySelector('.js-message')
       saveMessage(pj, message.value)
@@ -300,13 +281,13 @@ export const pjApp = (response) => {
       saveMessage(pj, message.join(''))
     })
   }
-  
+
   const saveMessage = (pj, m) => {
     let database = firebase.database()
     database.ref('chat/message' + Date.parse(Date())).set({
-      "player": pj,
-      "text": m
-    });
+      'player': pj,
+      'text': m
+    })
     _chatDraw(pj)
   }
 
