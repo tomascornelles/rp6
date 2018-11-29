@@ -105,51 +105,52 @@ export const pjApp = (response) => {
 
     for (let pj in pjs) {
       _pj = _data.characters[pj]
-      let _template = document.createElement('div')
-      _template.classList.add('js-template')
-      _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
-      <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
-        <div class="name">
-          <h4>${_pj.name}</h4>
-        </div>
-        <div class="class">
-          <p>${_pj.class}</p>
-        </div>
-        <div class="race">
-          <p>${_pj.race}</p>
-          <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
-        </div>
-        <div class="table">
-          <table>
-            <thead>
-              <tr>
-                <th>Fue</th>
-                <th>Men</th>
-                <th>Def</th>
-                <th>PV</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${_pj.force}</td>
-                <td>${_pj.mind}</td>
-                <td>${_printDefense()}</td>
-                <td>${_printPv()} / ${_pj.pv}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="skills box">
-          <h5>Habilidades</h5>
-          ${_printSkills()}
-        </div>
-        <div class="items box">
-          <h5>Equipamiento</h5>
-          <p>💰 ${_pj.mo} mo.</p>
-          ${_printItems()}
-        </div>`
-
-      if (_pj.token !== '') _container.append(_template)
+      if (_pj.visible) {
+        let _template = document.createElement('div')
+        _template.classList.add('js-template')
+        _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+        <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
+          <div class="name">
+            <h4>${_pj.name}</h4>
+          </div>
+          <div class="class">
+            <p>${_pj.class}</p>
+          </div>
+          <div class="race">
+            <p>${_pj.race}</p>
+            <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
+          </div>
+          <div class="table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fue</th>
+                  <th>Men</th>
+                  <th>Def</th>
+                  <th>PV</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${_pj.force}</td>
+                  <td>${_pj.mind}</td>
+                  <td>${_printDefense()}</td>
+                  <td>${_printPv()} / ${_pj.pv}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="skills box">
+            <h5>Habilidades</h5>
+            ${_printSkills()}
+          </div>
+          <div class="items box">
+            <h5>Equipamiento</h5>
+            <p>💰 ${_pj.mo} mo.</p>
+            ${_printItems()}
+          </div>`
+          _container.append(_template)
+        }
     }
 
     let more = document.querySelectorAll('.js-more-pj')
@@ -189,7 +190,7 @@ export const pjApp = (response) => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (item.type === 'armadura') defOut += parseFloat(item.def)
+        if (typeof item !== 'undefined' && item.type === 'armadura') defOut += parseFloat(item.def)
       }
     }
     return defOut
@@ -209,16 +210,18 @@ export const pjApp = (response) => {
     if (skills[0] !== '') {
       for (let i = 0; i < skills.length; i++) {
         let skill = _skills[skills[i].trim()]
-        let print = ''
-        print += (skill.activation !== '') ? `<strong>Activación:</strong>${skill.activation}<br>` : ''
-        print += (skill.cost !== '') ? `<strong>Coste:</strong>${skill.cost}<br>` : ''
-        print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
+        if (typeof skill !== 'undefined') {
+          let print = ''
+          print += (skill.activation !== '') ? `<strong>Activación:</strong>${skill.activation}<br>` : ''
+          print += (skill.cost !== '') ? `<strong>Coste:</strong>${skill.cost}<br>` : ''
+          print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
 
-        skillsout += `<div class="js-info">
-          <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
-          <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
-          <div class="js-info-text">${print}</div>
-        </div>`
+          skillsout += `<div class="js-info">
+            <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
+            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
+            <div class="js-info-text">${print}</div>
+          </div>`
+        }
       }
     }
     return skillsout
@@ -230,20 +233,22 @@ export const pjApp = (response) => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        let print = ''
-        print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-        print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
-        print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
-        print += (item.hands !== '')
-          ? (item.hands === '1')
-            ? '1 mano'
-            : '2 manos'
-          : ''
-        itemsout += `<div class="js-info">
-          <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-          <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
-          <div class="js-info-text">${print}</div>
-        </div>`
+        if (typeof item !== 'undefined') {
+          let print = ''
+          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
+          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
+          print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
+          print += (item.hands !== '')
+            ? (item.hands === '1')
+              ? '1 mano'
+              : '2 manos'
+            : ''
+          itemsout += `<div class="js-info">
+            <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
+            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
+            <div class="js-info-text">${print}</div>
+          </div>`
+        }
       }
     }
     return itemsout
