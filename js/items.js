@@ -30,18 +30,21 @@ export const itemsApp = (response) => {
       document.querySelector('.js-items-list').innerHTML = _printItems()
       document.querySelector('.js-items-new').innerHTML = _newItem()
 
-      document.querySelector('.js-edit-item').addEventListener('blur', function () {
-        console.log('update')
-        let item = this.dataset.item
-        let prop = this.dataset.prop
-        _items[item][prop] = this.innerHTML
-        _updateItem(_items[item], item)
+      document.querySelectorAll('.js-edit-item').forEach(item => {
+        item.addEventListener('blur', function () {
+          console.log('update')
+          let item = this.dataset.item
+          let prop = this.dataset.prop
+          _items[item][prop] = this.innerHTML
+          _updateItem(_items[item], item)
+        })
       })
-      document.querySelector('.js-edit-image').addEventListener('click', function () {
-        this.classList.add('hidden')
-        this.nextSibling.classList.remove('hidden')
+      document.querySelectorAll('.js-edit-image').forEach(image => {
+        image.addEventListener('click', function () {
+          this.classList.add('hidden')
+          this.nextSibling.classList.remove('hidden')
+        })
       })
-      
       document.querySelector('.js-item-form').addEventListener('submit', function (e) {
         e.preventDefault()
         let elements = this.elements
