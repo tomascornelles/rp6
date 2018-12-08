@@ -226,7 +226,7 @@ export const dmApp = (response) => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (typeof item !== 'undefined' && item.type === 'armadura') defOut += parseFloat(item.def)
+        if (typeof item !== 'undefined' && item.def !== '') defOut += parseFloat(item.def)
       }
     }
     return defOut
@@ -332,7 +332,7 @@ export const dmApp = (response) => {
     select += `<option>Añadir criatura</option>`
     for (const moster in _data.monsters) {
       if (_data.monsters.hasOwnProperty(moster)) {
-        select += `<option value="${moster}">${_data.monsters[moster].name}</option>`
+        select += `<option value="${moster}">${_data.monsters[moster].name} (${_items[_data.monsters[moster].weapon].name})</option>`
       }
     }
     select += '</select>'
@@ -382,21 +382,23 @@ export const dmApp = (response) => {
     </form>`
     container.append(chatBox)
     container.append(messages)
-    document.querySelector('.js-form').addEventListener('submit', function () {
-      let message = document.querySelector('.js-message')
-      saveMessage(pj, message.value)
+    document.querySelector('.js-chat-dm .js-form').addEventListener('submit', function (e) {
+      e.preventDefault()
+      let message = document.querySelector('.js-chat-dm .js-message').value
+      saveMessage(pj, message)
+      return false
     })
-    document.querySelector('.js-dices').addEventListener('change', function () {
-      let dice = document.querySelector('.js-dices').value
+    document.querySelector('.js-chat-dm .js-dices').addEventListener('change', function () {
+      let dice = this.value
       let throws = []
       for (let a = 0; a < dice; a++) {
         let t = Math.ceil(Math.random() * 6)
-        throws.push(' [' + t + '] ')
+        throws.push(' <img src="img/' + t + '.gif" width="32"> ')
       }
       let message = throws.sort().reverse()
       saveMessage(pj, message.join(''))
     })
-    document.querySelector('.js-form .js-item-select').addEventListener('change', function () {
+    document.querySelector('.js-chat-dm .js-item-select').addEventListener('change', function () {
       let item = _items[this.value]
       let print = ''
         print += (item.def !== '') ? `<span>Defensa:</span> +${item.def}<br>` : ''
@@ -416,7 +418,7 @@ export const dmApp = (response) => {
       let monster = _data.monsters[this.value]
       let weapon = _items[monster.weapon]
       let print = ''
-        print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name}<br>` : ''
+        print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name} <span class="dm-only">(${weapon.dmg})</span><br>` : ''
         print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
         print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
         print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''

@@ -85,7 +85,7 @@ export const pjApp = (response) => {
       </div>
       <div class="items box">
         <h5>Equipamiento</h5>
-        <p><span class="js-mo editable" contenteditable="true">${_pj.mo}</span> mo.</p>
+        <p><img src="img/mo.gif"><span class="js-mo editable" contenteditable="true">${_pj.mo}</span> mo.</p>
         ${_printItems()}
       </div>
       `
@@ -146,7 +146,7 @@ export const pjApp = (response) => {
           </div>
           <div class="items box">
             <h5>Equipamiento</h5>
-            <p>💰 ${_pj.mo} mo.</p>
+            <p><img src="img/mo.gif"> ${_pj.mo} mo.</p>
             ${_printItems()}
           </div>`
           _container.append(_template)
@@ -190,7 +190,7 @@ export const pjApp = (response) => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (typeof item !== 'undefined' && item.type === 'armadura') defOut += parseFloat(item.def)
+        if (typeof item !== 'undefined' && item.def !== '') defOut += parseFloat(item.def)
       }
     }
     return defOut
@@ -270,7 +270,8 @@ export const pjApp = (response) => {
       p.innerHTML = responsePrint
       container.prepend(p)
     }
-    document.querySelector('.js-form').addEventListener('submit', function () {
+    document.querySelector('.js-form').addEventListener('submit', function (e) {
+      e.preventDefault()
       let message = document.querySelector('.js-message')
       saveMessage(pj, message.value)
     })
@@ -279,7 +280,7 @@ export const pjApp = (response) => {
       let throws = []
       for (let a = 0; a < dice; a++) {
         let t = Math.ceil(Math.random() * 6)
-        throws.push(' [' + t + '] ')
+        throws.push(' <img src="img/' + t + '.gif" width="32"> ')
       }
       console.log(throws)
       let message = throws.sort().reverse()
