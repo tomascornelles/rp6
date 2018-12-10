@@ -123,7 +123,7 @@ export const homeApp = () => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (item.type === 'armadura') defOut += parseFloat(item.def)
+        if (item.def) defOut += parseFloat(item.def)
       }
     }
     return defOut

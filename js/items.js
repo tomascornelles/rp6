@@ -49,7 +49,6 @@ export const itemsApp = (response) => {
         e.preventDefault()
         let elements = this.elements
         let item = {}
-        console.log(elements.length)
         for (let i = 0; i < elements.length; i++) {
           if (elements[i].type !== 'submit') {
             item[elements[i].dataset.prop] = elements[i].value
@@ -57,8 +56,19 @@ export const itemsApp = (response) => {
         }
         let itemName = item.name.split(' ').join('')
         itemName = itemName.toLowerCase()
-        console.log(itemName)
-        _updateItem(item, itemName)
+        if (itemName !== '') {
+          let display = document.querySelector('.js-items-new')
+          display.style.display = (display.style.display === 'block') ? 'none' : 'block'
+          this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
+          _updateItem(item, itemName)
+        }
+        
+      })
+      document.querySelector('.js-show-new-item').addEventListener('click', function () {
+        console.log(this.innerHTML)
+        let display = document.querySelector('.js-items-new')
+        display.style.display = (display.style.display === 'block') ? 'none' : 'block'
+        this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
       })
     })
   }
@@ -66,7 +76,7 @@ export const itemsApp = (response) => {
   const _printItems = () => {
     let itemsout = `<table>
                       </thead>
-                        <th></th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th>`
+                        <th></th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th><th>Type</th>`
     for (let _item in _items) {
       let item = _items[_item]
       let print = '<tr>'
@@ -77,6 +87,7 @@ export const itemsApp = (response) => {
       print += (item.range !== '') ? `<td data-item="${_item}" data-prop="range" contenteditable="true" class="js-edit-item">${item.range}</td>` : '<td></td>'
       print += (item.hands !== '') ? `<td data-item="${_item}" data-prop="hands" contenteditable="true" class="js-edit-item">${item.hands}</td>` : '<td></td>'
       print += (item.price !== '') ? `<td data-item="${_item}" data-prop="price" contenteditable="true" class="js-edit-item">${item.price}</td>` : '<td></td>'
+      print += (item.type !== '') ? `<td data-item="${_item}" data-prop="type" contenteditable="true" class="js-edit-item">${item.type}</td>` : '<td></td>'
       print += `</tr>`
       itemsout += print
     }
