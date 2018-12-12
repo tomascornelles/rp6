@@ -7,10 +7,10 @@ export const homeApp = () => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
-      authDomain: "rp6app.firebaseapp.com",
-      databaseURL: "https://rp6app.firebaseio.com",
-      projectId: "rp6app"
+      apiKey: 'AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4',
+      authDomain: 'rp6app.firebaseapp.com',
+      databaseURL: 'https://rp6app.firebaseio.com',
+      projectId: 'rp6app'
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -37,7 +37,7 @@ export const homeApp = () => {
     _container.innerHTML = ''
 
     for (let key in pjs) {
-      _loadPJ(key)
+      if (pjs[key].type === 'pj') _loadPJ(key)
     }
 
     let more = document.querySelectorAll('.js-more-pj')
@@ -135,16 +135,18 @@ export const homeApp = () => {
     if (skills[0] !== '') {
       for (let i = 0; i < skills.length; i++) {
         let skill = _skills[skills[i].trim()]
-        let print = ''
-        print += (skill.activation !== '') ? `<strong>Activación:</strong>${skill.activation}<br>` : ''
-        print += (skill.cost !== '') ? `<strong>Coste:</strong>${skill.cost}<br>` : ''
-        print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
+        if (typeof item !== 'undefined') {
+          let print = ''
+          print += (skill.activation !== '') ? `<strong>Activación:</strong>${skill.activation}<br>` : ''
+          print += (skill.cost !== '') ? `<strong>Coste:</strong>${skill.cost}<br>` : ''
+          print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
 
-        skillsout += `<div class="js-info">
-          <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
-          <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
-          <div class="js-info-text">${print}</div>
-        </div>`
+          skillsout += `<div class="js-info">
+            <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
+            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
+            <div class="js-info-text">${print}</div>
+          </div>`
+        }
       }
     }
     return skillsout
@@ -156,20 +158,22 @@ export const homeApp = () => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        let print = ''
-        print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-        print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
-        print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
-        print += (item.hands !== '')
-          ? (item.hands === '1')
-            ? '1 mano'
-            : '2 manos'
-          : ''
-        itemsout += `<div class="js-info">
-          <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-          <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
-          <div class="js-info-text">${print}</div>
-        </div>`
+        if (typeof item !== 'undefined') {
+          let print = ''
+          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
+          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
+          print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
+          print += (item.hands !== '')
+            ? (item.hands === '1')
+              ? '1 mano'
+              : '2 manos'
+            : ''
+          itemsout += `<div class="js-info">
+            <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
+            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
+            <div class="js-info-text">${print}</div>
+          </div>`
+        }
       }
     }
     return itemsout
