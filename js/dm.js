@@ -118,21 +118,22 @@ export const dmApp = (response) => {
               </thead>
               <tbody>
                 <tr>
-                  <td>${_pj.force}</td>
-                  <td>${_pj.mind}</td>
+                  <td><span class="js-edit-attr" data-pj="${pj}" data-attr="force" contenteditable="true">${_pj.force}</span></td>
+                  <td><span class="js-edit-attr" data-pj="${pj}" data-attr="mind" contenteditable="true">${_pj.mind}</span></td>
                   <td>${_printDefense()}</td>
-                  <td>${_printPv()} / ${_pj.pv}</td>
+                  <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr" data-pj="${pj}" data-attr="pv" contenteditable="true">${_pj.pv}</span></td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="skills box">
             <h5>Habilidades</h5>
-            ${_printSkills()}
+            ${_printSkills(pj)}
+            <div class="js-skill-list">${_skillList(pj)}</div>
           </div>
           <div class="items box">
             <h5>Equipamiento</h5>
-            <p><span class="js-mo" contenteditable="true">${_pj.mo}</span> mo.</p>
+            <p><span class="js-edit-attr" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span> mo.</p>
             ${_printItems(pj)}
             <div class="js-item-list">${_itemList(pj)}</div>
           </div>
@@ -145,10 +146,11 @@ export const dmApp = (response) => {
       }
 
 
-      let _mo = document.querySelectorAll('.js-mo')
+      let _mo = document.querySelectorAll('.js-edit-attr')
       _mo.forEach(item => {
         item.addEventListener('blur', function () {
-          _setMo(pj, this.innerHTML)
+          console.log(this.dataset.pj, this.dataset.attr, this.innerHTML)
+          _setAttr(this.dataset.pj, this.dataset.attr, this.innerHTML)
         })
       })
     }
@@ -184,10 +186,23 @@ export const dmApp = (response) => {
       }, false)
     })
 
+    let skillSelect = document.querySelectorAll('.js-skill-select')
+    skillSelect.forEach(skill => {
+      skill.addEventListener('change', function () {
+        _addSkill(this.dataset.pj, this.value)
+      })
+    })
     let itemSelect = document.querySelectorAll('.js-item-select')
     itemSelect.forEach(item => {
       item.addEventListener('change', function () {
         _addItem(this.dataset.pj, this.value)
+      })
+    })
+
+    let skillRemove = document.querySelectorAll('.js-skill-remove')
+    skillRemove.forEach(skill => {
+      skill.addEventListener('click', function () {
+        _removeSkill(this.dataset.pj, this.dataset.skill)
       })
     })
 
@@ -199,9 +214,26 @@ export const dmApp = (response) => {
     })
   }
 
-  const _setMo = (pj, mo) => {
+  const _setAttr = (pj, attr, val) => {
     let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'mo': mo })
+    let message = ''
+    if (attr === 'mo') {
+      database.ref().child('/characters/' + pj).update({ 'mo': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val}mo.`
+    } else if (attr === 'force'){
+      database.ref().child('/characters/' + pj).update({ 'force': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val} puntos de fuerza.`
+    } else if (attr === 'mind'){
+      database.ref().child('/characters/' + pj).update({ 'mind': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val} puntos de mente.`
+    } else if (attr === 'dmg'){
+      message = `A ${_data.characters[pj].name} le quedan ${val - _data.characters[pj].pv} puntos de vida.`
+      database.ref().child('/characters/' + pj).update({ 'dmg': val })
+    } else if (attr === 'pv'){
+      database.ref().child('/characters/' + pj).update({ 'pv': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
+    } 
+    saveMessage('dm', message)
   }
 
   const _removeToken = (pj) => {
@@ -240,7 +272,7 @@ export const dmApp = (response) => {
     return (parseFloat(_pj.pv) - parseFloat(_pj.dmg)) / parseFloat(_pj.pv) * 100
   }
 
-  const _printSkills = () => {
+  const _printSkills = (pj) => {
     let skills = _pj.skills.split(',')
     let skillsout = ''
     if (skills[0] !== '') {
@@ -254,13 +286,51 @@ export const dmApp = (response) => {
 
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
-            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
+            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}<a class="js-skill-remove button-outline" data-pj="${pj}" data-skill="${skills[i]}">×</a></label>
             <div class="js-info-text">${print}</div>
           </div>`
         }
       }
     }
     return skillsout
+  }
+
+  const _skillList = (pj) => {
+    let select = `<select class="js-skill-select" data-pj="${pj}">`
+    select += `<option>Añadir skill</option>`
+    for (const skill in _skills) {
+      if (_skills.hasOwnProperty(skill)) {
+        const element = _skills[skill];
+        select += `<option value="${skill}">${_skills[skill].name}</option>`
+      }
+    }
+    select += '</select>'
+    return select
+  }
+
+  const _addSkill = (pj, i) => {
+    let skills = _data.characters[pj].skills
+    if (skills === '') {
+      skills = i
+    } else {
+      skills = skills.split(',')
+      skills.push(i)
+      skills = skills.join(',')
+    }
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'skills': skills })
+  }
+
+  const _removeSkill = (pj, i) => {
+    console.log(pj)
+    let skills = []
+    let skills_init = _data.characters[pj].skills.split(',')
+    for (let a=0; a < skills_init.length; a++) {
+      if (skills_init[a] !== i) skills.push(skills_init[a])
+    }
+    skills = skills.join(',')
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'skills': skills })
   }
 
   const _printItems = (pj) => {
@@ -328,11 +398,11 @@ export const dmApp = (response) => {
   }
 
   const _monsterList = (pj) => {
-    let select = `<select class="js-moster-select" data-pj="${pj}">`
+    let select = `<select class="js-monster-select" data-pj="${pj}">`
     select += `<option>Añadir criatura</option>`
-    for (const moster in _data.monsters) {
-      if (_data.monsters.hasOwnProperty(moster)) {
-        select += `<option value="${moster}">${_data.monsters[moster].name} (${_items[_data.monsters[moster].weapon].name})</option>`
+    for (const monster in _data.monsters) {
+      if (_data.monsters.hasOwnProperty(monster)) {
+        select += `<option value="${monster}">${_data.monsters[monster].name} (${_items[_data.monsters[monster].weapon].name})</option>`
       }
     }
     select += '</select>'
@@ -414,7 +484,7 @@ export const dmApp = (response) => {
         ${print}`
       saveMessage(pj, message)
     })
-    document.querySelector('.js-form .js-moster-select').addEventListener('change', function () {
+    document.querySelector('.js-form .js-monster-select').addEventListener('change', function () {
       let monster = _data.monsters[this.value]
       let weapon = _items[monster.weapon]
       let print = ''

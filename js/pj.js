@@ -182,6 +182,8 @@ export const pjApp = (response) => {
   const _setMo = (pj, mo) => {
     let database = firebase.database()
     database.ref().child('/characters/' + pj).update({ 'mo': mo })
+    let message = `Ahora tengo ${mo}mo.`
+    saveMessage(pj, message)
   }
 
   const _printDefense = () => {

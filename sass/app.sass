@@ -435,13 +435,17 @@
       cursor: pointer
       
   .list
-    .disabled
-      opacity: .6
-      border: 0
 
+    .disabled
+      opacity: .4
+      background: #ccc
+      border: 0
+    & > div 
+      min-height: 4em
   .barra 
     height: 5px
     background: #c00
+    margin-bottom: 5px
     .vida
       height: 5px
       background: #093
