@@ -85,7 +85,7 @@ export const itemsApp = (response) => {
   const _printItems = () => {
     let itemsout = `<table>
                       </thead>
-                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th><th>Type</th>`
+                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th><th>Type</th><th></th>`
     for (let _item in _items) {
       let item = _items[_item]
       let print = '<tr>'

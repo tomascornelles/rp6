@@ -9,9 +9,8 @@ var page = require('page')
 
 page('/', home.homeApp)
 page('/dm', dm.dmApp)
-page('/items', items.itemsApp)
-page('/monsters', monsters.monstersApp)
+page('/library/items', items.itemsApp)
+page('/library/monsters', monsters.monstersApp)
 page('/:pj', pj.pjApp)
 // page('/logout/:pj', session.logout)
 page()
-
