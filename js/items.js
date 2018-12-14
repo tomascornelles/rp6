@@ -116,7 +116,7 @@ export const itemsApp = (response) => {
     <input type="text" placeholder="Hands" data-prop="hands" name="hands">
     <input type="text" placeholder="Price" data-prop="price" name="price">
     <input type="text" placeholder="Type" data-prop="type" name="type">
-    <input type="submit" value="Guardar" class="js-item-save">
+    <input type="submit" value="Save" class="js-item-save">
     </form>`
 
     return form
