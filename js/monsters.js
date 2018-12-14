@@ -1,16 +1,15 @@
 export const monstersApp = (response) => {
   var firebase = require('firebase/app')
-  let _pj = {}
-  let _monsters, _items, _data
+  let _monsters, _data, _items
 
   const _init = () => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
-      authDomain: "rp6app.firebaseapp.com",
-      databaseURL: "https://rp6app.firebaseio.com",
-      projectId: "rp6app"
+      apiKey: 'AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4',
+      authDomain: 'rp6app.firebaseapp.com',
+      databaseURL: 'https://rp6app.firebaseio.com',
+      projectId: 'rp6app'
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -45,6 +44,15 @@ export const monstersApp = (response) => {
           this.nextSibling.classList.remove('hidden')
         })
       })
+      document.querySelectorAll('.js-monster-delete').forEach(image => {
+        image.addEventListener('click', function () {
+          console.log('delete')
+          let id = this.dataset.item
+          let database = firebase.database()
+          database.ref('items/' + id).remove()
+          document.querySelector('.js-items-list').innerHTML = _printMonsters()
+        })
+      })
       document.querySelector('.js-monster-form').addEventListener('submit', function (e) {
         e.preventDefault()
         let elements = this.elements
@@ -62,7 +70,6 @@ export const monstersApp = (response) => {
           this.innerHTML = (this.innerHTML === 'Add Monster') ? 'Close' : 'Add Monster'
           _updatemonster(monster, monsterName)
         }
-        
       })
       document.querySelector('.js-show-new-monster').addEventListener('click', function () {
         console.log(this.innerHTML)
@@ -76,17 +83,19 @@ export const monstersApp = (response) => {
   const _printMonsters = () => {
     let monstersout = `<table>
                       </thead>
-                        <th></th><th>Name</th><th>Atk</th><th>Def</th><th>HP</th><th>Weapon</th><th>Type</th>`
+                        <th></th><th>ID</th><th>Name</th><th>Atk</th><th>Def</th><th>HP</th><th>Weapon</th><th>Type</th><th></th>`
     for (let _monster in _monsters) {
       let monster = _monsters[_monster]
       let print = '<tr>'
       print += `<td><img src="${monster.icon}" height="20" class="js-edit-image"><span data-monster="${_monster}" data-prop="icon" contenteditable="true" class="js-edit-monster hidden">${monster.icon}</span></td>`
+      print += `<td>${_monster}</td>`
       print += `<td data-monster="${_monster}" data-prop="name" contenteditable="true" class="js-edit-monster">${monster.name}</td>`
       print += (monster.atk !== '') ? `<td data-monster="${_monster}" data-prop="atk" contenteditable="true" class="js-edit-monster">${monster.atk}</td>` : '<td></td>'
       print += (monster.def !== '') ? `<td data-monster="${_monster}" data-prop="def" contenteditable="true" class="js-edit-monster">${monster.def}</td>` : '<td></td>'
       print += (monster.hp !== '') ? `<td data-monster="${_monster}" data-prop="hp" contenteditable="true" class="js-edit-monster">${monster.hp}</td>` : '<td></td>'
       print += (monster.weapon !== '') ? `<td data-monster="${_monster}" data-prop="weapon" contenteditable="true" class="js-edit-monster">${monster.weapon}</td>` : '<td></td>'
       print += (monster.type !== '') ? `<td data-monster="${_monster}" data-prop="type" contenteditable="true" class="js-edit-monster">${monster.type}</td>` : '<td></td>'
+      print += `<td><button class="js-monster-delete delete button button-outline" data-item="${_monster}">Borrar</button></td>`
       print += `</tr>`
       monstersout += print
     }
@@ -112,43 +121,6 @@ export const monstersApp = (response) => {
   const _updatemonster = (item, itemName) => {
     let database = firebase.database()
     database.ref().child('/monsters/' + itemName).update(item)
-  }
-
-  const _itemList = (pj) => {
-    let select = `<select class="js-item-select" data-pj="${pj}">`
-    select += `<option>Añadir item</option>`
-    for (const item in _items) {
-      if (_items.hasOwnProperty(item)) {
-        const element = _items[item];
-        select += `<option value="${item}">${_items[item].name}</option>`
-      }
-    }
-    select += '</select>'
-    return select
-  }
-
-  const _addItem = (pj, i) => {
-    let items = _data.characters[pj].items
-    if (items === '') {
-      items = i
-    } else {
-      items = items.split(',')
-      items.push(i)
-      items = items.join(',')
-    }
-    let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'items': items })
-  }
-
-  const _removeItem = (pj, i) => {
-    let items = []
-    let items_init = _data.characters[pj].items.split(',')
-    for (let a=0; a < items_init.length; a++) {
-      if (items_init[a] !== i) items.push(items_init[a])
-    }
-    items = items.join(',')
-    let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'items': items })
   }
 
   _init()

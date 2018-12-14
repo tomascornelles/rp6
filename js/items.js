@@ -45,6 +45,15 @@ export const itemsApp = (response) => {
           this.nextSibling.classList.remove('hidden')
         })
       })
+      document.querySelectorAll('.js-item-delete').forEach(image => {
+        image.addEventListener('click', function () {
+          console.log('delete')
+          let id = this.dataset.item
+          let database = firebase.database()
+          database.ref('items/' + id).remove()
+          document.querySelector('.js-items-list').innerHTML = _printItems()
+        })
+      })
       document.querySelector('.js-item-form').addEventListener('submit', function (e) {
         e.preventDefault()
         let elements = this.elements
@@ -76,11 +85,12 @@ export const itemsApp = (response) => {
   const _printItems = () => {
     let itemsout = `<table>
                       </thead>
-                        <th></th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th><th>Type</th>`
+                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th><th>Type</th><th></th>`
     for (let _item in _items) {
       let item = _items[_item]
       let print = '<tr>'
       print += `<td><img src="${item.icon}" height="20" class="js-edit-image"><span data-item="${_item}" data-prop="icon" contenteditable="true" class="js-edit-item hidden">${item.icon}</span></td>`
+      print += `<td>${_item}</td>`
       print += `<td data-item="${_item}" data-prop="name" contenteditable="true" class="js-edit-item">${item.name}</td>`
       print += (item.def !== '') ? `<td data-item="${_item}" data-prop="def" contenteditable="true" class="js-edit-item">${item.def}</td>` : '<td></td>'
       print += (item.dmg !== '') ? `<td data-item="${_item}" data-prop="dmg" contenteditable="true" class="js-edit-item">${item.dmg}</td>` : '<td></td>'
@@ -88,6 +98,7 @@ export const itemsApp = (response) => {
       print += (item.hands !== '') ? `<td data-item="${_item}" data-prop="hands" contenteditable="true" class="js-edit-item">${item.hands}</td>` : '<td></td>'
       print += (item.price !== '') ? `<td data-item="${_item}" data-prop="price" contenteditable="true" class="js-edit-item">${item.price}</td>` : '<td></td>'
       print += (item.type !== '') ? `<td data-item="${_item}" data-prop="type" contenteditable="true" class="js-edit-item">${item.type}</td>` : '<td></td>'
+      print += `<td><button class="js-item-delete delete button button-outline" data-item="${_item}">Borrar</button></td>`
       print += `</tr>`
       itemsout += print
     }
