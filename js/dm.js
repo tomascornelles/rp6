@@ -7,10 +7,10 @@ export const dmApp = (response) => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
-      authDomain: "rp6app.firebaseapp.com",
-      databaseURL: "https://rp6app.firebaseio.com",
-      projectId: "rp6app"
+      apiKey: 'AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4',
+      authDomain: 'rp6app.firebaseapp.com',
+      databaseURL: 'https://rp6app.firebaseio.com',
+      projectId: 'rp6app'
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -21,7 +21,7 @@ export const dmApp = (response) => {
       _data = snapshot.val()
       _items = _data.items
       _skills = _data.skills
-      
+
       _listPJs()
       _chatDraw('dm')
 
@@ -145,7 +145,6 @@ export const dmApp = (response) => {
         _container.append(_template)
       }
 
-
       let _mo = document.querySelectorAll('.js-edit-attr')
       _mo.forEach(item => {
         item.addEventListener('blur', function () {
@@ -154,18 +153,18 @@ export const dmApp = (response) => {
         })
       })
     }
-      let _token = document.querySelectorAll('.js-remove-token')
-      _token.forEach(item => {
-        item.addEventListener('click', function () {
-          _removeToken(this.dataset.pj)
-        })
+    let _token = document.querySelectorAll('.js-remove-token')
+    _token.forEach(item => {
+      item.addEventListener('click', function () {
+        _removeToken(this.dataset.pj)
       })
-      let _visible = document.querySelectorAll('.js-toggle-visible')
-      _visible.forEach(item => {
-        item.addEventListener('click', function () {
-          _toggleVisible(this.dataset.pj)
-        })
+    })
+    let _visible = document.querySelectorAll('.js-toggle-visible')
+    _visible.forEach(item => {
+      item.addEventListener('click', function () {
+        _toggleVisible(this.dataset.pj)
       })
+    })
 
     let more = document.querySelectorAll('.js-more-pj')
     more.forEach(item => {
@@ -220,19 +219,19 @@ export const dmApp = (response) => {
     if (attr === 'mo') {
       database.ref().child('/characters/' + pj).update({ 'mo': val })
       message = `${_data.characters[pj].name} ahora tiene ${val}mo.`
-    } else if (attr === 'force'){
+    } else if (attr === 'force') {
       database.ref().child('/characters/' + pj).update({ 'force': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de fuerza.`
-    } else if (attr === 'mind'){
+    } else if (attr === 'mind') {
       database.ref().child('/characters/' + pj).update({ 'mind': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de mente.`
-    } else if (attr === 'dmg'){
+    } else if (attr === 'dmg') {
       message = `A ${_data.characters[pj].name} le quedan ${val - _data.characters[pj].pv} puntos de vida.`
       database.ref().child('/characters/' + pj).update({ 'dmg': val })
-    } else if (attr === 'pv'){
+    } else if (attr === 'pv') {
       database.ref().child('/characters/' + pj).update({ 'pv': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
-    } 
+    }
     saveMessage('dm', message)
   }
 
@@ -300,7 +299,7 @@ export const dmApp = (response) => {
     select += `<option>Añadir skill</option>`
     for (const skill in _skills) {
       if (_skills.hasOwnProperty(skill)) {
-        const element = _skills[skill];
+        const element = _skills[skill]
         select += `<option value="${skill}">${_skills[skill].name}</option>`
       }
     }
@@ -325,7 +324,7 @@ export const dmApp = (response) => {
     console.log(pj)
     let skills = []
     let skills_init = _data.characters[pj].skills.split(',')
-    for (let a=0; a < skills_init.length; a++) {
+    for (let a = 0; a < skills_init.length; a++) {
       if (skills_init[a] !== i) skills.push(skills_init[a])
     }
     skills = skills.join(',')
@@ -365,7 +364,7 @@ export const dmApp = (response) => {
     select += `<option>Añadir item</option>`
     for (const item in _items) {
       if (_items.hasOwnProperty(item)) {
-        const element = _items[item];
+        const element = _items[item]
         select += `<option value="${item}">${_items[item].name}</option>`
       }
     }
@@ -389,7 +388,7 @@ export const dmApp = (response) => {
   const _removeItem = (pj, i) => {
     let items = []
     let items_init = _data.characters[pj].items.split(',')
-    for (let a=0; a < items_init.length; a++) {
+    for (let a = 0; a < items_init.length; a++) {
       if (items_init[a] !== i) items.push(items_init[a])
     }
     items = items.join(',')
@@ -471,14 +470,14 @@ export const dmApp = (response) => {
     document.querySelector('.js-chat-dm .js-item-select').addEventListener('change', function () {
       let item = _items[this.value]
       let print = ''
-        print += (item.def !== '') ? `<span>Defensa:</span> +${item.def}<br>` : ''
-        print += (item.dmg !== '') ? `<span>Daño:</span> ${item.dmg}<br>` : ''
-        print += (item.range !== '') ? `<span>Alcance:</span> ${item.range}<br>` : ''
-        print += (item.hands !== '')
-          ? (item.hands === '1')
-            ? '1 mano'
-            : '2 manos'
-          : ''
+      print += (item.def !== '') ? `<span>Defensa:</span> +${item.def}<br>` : ''
+      print += (item.dmg !== '') ? `<span>Daño:</span> ${item.dmg}<br>` : ''
+      print += (item.range !== '') ? `<span>Alcance:</span> ${item.range}<br>` : ''
+      print += (item.hands !== '')
+        ? (item.hands === '1')
+          ? '1 mano'
+          : '2 manos'
+        : ''
       let message = `<img src="${item.icon}" width="36">
         <h3>${item.name}</h3>
         ${print}`
@@ -488,35 +487,35 @@ export const dmApp = (response) => {
       let monster = _data.monsters[this.value]
       let weapon = _items[monster.weapon]
       let print = ''
-        print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name} <span class="dm-only">(${weapon.dmg})</span><br>` : ''
-        print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
-        print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
-        print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''
+      print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name} <span class="dm-only">(${weapon.dmg})</span><br>` : ''
+      print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
+      print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
+      print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''
       let message = `<img src="${monster.icon}" width="36">
         <h3>${monster.name}</h3>
         ${print}`
       saveMessage(pj, message)
     })
     let deleteButton = document.querySelectorAll('.js-chat-delete')
-      deleteButton.forEach(button => {
-        button.addEventListener('click', function () {
-          _deleteMessage(pj,this.dataset.id)
-        })
+    deleteButton.forEach(button => {
+      button.addEventListener('click', function () {
+        _deleteMessage(pj, this.dataset.id)
       })
+    })
   }
 
-  const _deleteMessage = (pj,id) => {
+  const _deleteMessage = (pj, id) => {
     let database = firebase.database()
     database.ref('chat/' + id).remove()
     _chatDraw(pj)
   }
-  
+
   const saveMessage = (pj, m) => {
     let database = firebase.database()
     database.ref('chat/message' + Date.parse(Date())).set({
-      "player": pj,
-      "text": m
-    });
+      'player': pj,
+      'text': m
+    })
     _chatDraw(pj)
   }
 
