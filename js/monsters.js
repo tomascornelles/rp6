@@ -112,7 +112,7 @@ export const monstersApp = (response) => {
     <input type="text" placeholder="HP" data-prop="hp" name="hp">
     <input type="text" placeholder="Weapon" data-prop="weapon" name="weapon">
     <input type="text" placeholder="Type" data-prop="type" name="type">
-    <input type="submit" value="Guardar" class="js-monster-save">
+    <input type="submit" value="Save" class="js-monster-save">
     </form>`
 
     return form
