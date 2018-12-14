@@ -7,10 +7,10 @@ export const itemsApp = (response) => {
     require('firebase/database')
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4",
-      authDomain: "rp6app.firebaseapp.com",
-      databaseURL: "https://rp6app.firebaseio.com",
-      projectId: "rp6app"
+      apiKey: 'AIzaSyA9QlXVmuDcG20RGtkkhlMVBOyuSFqcsJ4',
+      authDomain: 'rp6app.firebaseapp.com',
+      databaseURL: 'https://rp6app.firebaseio.com',
+      projectId: 'rp6app'
     }
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -71,7 +71,6 @@ export const itemsApp = (response) => {
           this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
           _updateItem(item, itemName)
         }
-        
       })
       document.querySelector('.js-show-new-item').addEventListener('click', function () {
         console.log(this.innerHTML)
@@ -132,7 +131,7 @@ export const itemsApp = (response) => {
     select += `<option>Añadir item</option>`
     for (const item in _items) {
       if (_items.hasOwnProperty(item)) {
-        const element = _items[item];
+        const element = _items[item]
         select += `<option value="${item}">${_items[item].name}</option>`
       }
     }
@@ -156,7 +155,7 @@ export const itemsApp = (response) => {
   const _removeItem = (pj, i) => {
     let items = []
     let items_init = _data.characters[pj].items.split(',')
-    for (let a=0; a < items_init.length; a++) {
+    for (let a = 0; a < items_init.length; a++) {
       if (items_init[a] !== i) items.push(items_init[a])
     }
     items = items.join(',')

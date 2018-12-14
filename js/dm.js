@@ -286,7 +286,7 @@ export const dmApp = (response) => {
 
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
-            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}<a class="js-skill-remove button-outline" data-pj="${pj}" data-skill="${skills[i]}">×</a></label>
+            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}<a class="js-skill-remove delete button-outline" data-pj="${pj}" data-skill="${skills[i]}">×</a></label>
             <div class="js-info-text">${print}</div>
           </div>`
         }
@@ -351,7 +351,7 @@ export const dmApp = (response) => {
             : ''
           itemsout += `<div class="js-info">
             <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
+            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove delete button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
             <div class="js-info-text">${print}</div>
           </div>`
         }
