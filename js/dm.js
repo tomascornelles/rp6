@@ -445,7 +445,7 @@ export const dmApp = (response) => {
         ${_monsterList()}
       </div>
       <div class="flex">
-        <input type="text" class="js-message">
+        <textarea class="js-message"></textarea>
         <input type="submit" value="Enviar" class="js-send">
       </div>
     </form>`
@@ -454,6 +454,8 @@ export const dmApp = (response) => {
     document.querySelector('.js-chat-dm .js-form').addEventListener('submit', function (e) {
       e.preventDefault()
       let message = document.querySelector('.js-chat-dm .js-message').value
+      message = message.split('\n').join('<br>')
+      console.log(message)
       saveMessage(pj, message)
       return false
     })
