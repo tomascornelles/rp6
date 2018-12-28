@@ -22,65 +22,40 @@ export const dmApp = (response) => {
       _items = _data.items
       _skills = _data.skills
 
-      _listPJs()
-      _chatDraw('dm')
+      if (window.sessionStorage.getItem("user")) {
+        _listPJs()
+        _chatDraw('dm')
+        let pages = document.querySelectorAll('.page')
+        pages.forEach(page => {
+          page.style.display = 'none'
+        })
+        document.querySelector('.js-page-dm').style.display = 'block'
 
-      let pages = document.querySelectorAll('.page')
-      pages.forEach(page => {
-        page.style.display = 'none'
-      })
-      document.querySelector('.js-page-dm').style.display = 'block'
+      } else {
+        let pages = document.querySelectorAll('.page')
+        pages.forEach(page => {
+          page.style.display = 'none'
+        })
+        document.querySelector('.js-page-login').style.display = 'block'
+        _printLogin()
+      }
+
     })
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
   }
 
-  const _loadPJ = (pj) => {
-    _pj = _data.characters[pj]
-    let _template = document.createElement('div')
-    _template.classList.add('js-template')
-    _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
-      <div class="name">
-        <h4>${_pj.name}</h4>
-      </div>
-      <div class="class">
-        <p>${_pj.class}</p>
-      </div>
-      <div class="race">
-        <p>${_pj.race}</p>
-        <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
-      </div>
-      <div class="table">
-        <table>
-          <thead>
-            <tr>
-              <th>Fue</th>
-              <th>Men</th>
-              <th>Def</th>
-              <th>PV</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>${_pj.force}</td>
-              <td>${_pj.mind}</td>
-              <td>${_printDefense()}</td>
-              <td>${_printPv()} / ${_pj.pv}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="skills">
-        <h5>Habilidades</h5>${_printSkills()}
-      </div>
-      <div class="items">
-        <h5>Equipamiento</h5>${_printItems()}
-      </div>
-      `
+  const _printLogin = () => {
+    let user = document.querySelector('.js-login-user')
+    let pass = document.querySelector('.js-login-pass')
+    let submit = document.querySelector('.js-login-submit')
 
-    let _container = document.querySelector('.js-sheet')
-    _container.innerHTML = ''
-    _container.append(_template)
+    submit.addEventListener('click', function () {
+      if(_data.users[user.value].pass === pass.value) {
+        window.sessionStorage.setItem('user', user.value)
+        window.location = '/dm'
+      }
+    })
   }
 
   const _listPJs = () => {

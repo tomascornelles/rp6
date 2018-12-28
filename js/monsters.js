@@ -27,56 +27,67 @@ export const monstersApp = (response) => {
       })
       document.querySelector('.js-page-monsters').style.display = 'block'
       document.querySelector('.js-monsters-list').innerHTML = _printMonsters()
-      document.querySelector('.js-monsters-new').innerHTML = _newMonster()
+      
+      if (window.sessionStorage.getItem("user")) {
+        document.querySelector('.js-monsters-new').innerHTML = _newMonster()
 
-      document.querySelectorAll('.js-edit-monster').forEach(monster => {
-        monster.addEventListener('blur', function () {
-          console.log('update')
-          let monster = this.dataset.monster
-          let prop = this.dataset.prop
-          _monsters[monster][prop] = this.innerHTML
-          _updatemonster(_monsters[monster], monster)
+        document.querySelectorAll('.js-edit-monster').forEach(monster => {
+          monster.addEventListener('blur', function () {
+            console.log('update')
+            let monster = this.dataset.monster
+            let prop = this.dataset.prop
+            _monsters[monster][prop] = this.innerHTML
+            _updatemonster(_monsters[monster], monster)
+          })
         })
-      })
-      document.querySelectorAll('.js-edit-image').forEach(image => {
-        image.addEventListener('click', function () {
-          this.classList.add('hidden')
-          this.nextSibling.classList.remove('hidden')
+        document.querySelectorAll('.js-edit-image').forEach(image => {
+          image.addEventListener('click', function () {
+            this.classList.add('hidden')
+            this.nextSibling.classList.remove('hidden')
+          })
         })
-      })
-      document.querySelectorAll('.js-monster-delete').forEach(image => {
-        image.addEventListener('click', function () {
-          console.log('delete')
-          let id = this.dataset.item
-          let database = firebase.database()
-          database.ref('items/' + id).remove()
-          document.querySelector('.js-items-list').innerHTML = _printMonsters()
+        document.querySelectorAll('.js-monster-delete').forEach(image => {
+          image.addEventListener('click', function () {
+            console.log('delete')
+            let id = this.dataset.item
+            let database = firebase.database()
+            database.ref('items/' + id).remove()
+            document.querySelector('.js-items-list').innerHTML = _printMonsters()
+          })
         })
-      })
-      document.querySelector('.js-monster-form').addEventListener('submit', function (e) {
-        e.preventDefault()
-        let elements = this.elements
-        let monster = {}
-        for (let i = 0; i < elements.length; i++) {
-          if (elements[i].type !== 'submit') {
-            monster[elements[i].dataset.prop] = elements[i].value
+        document.querySelector('.js-monster-form').addEventListener('submit', function (e) {
+          e.preventDefault()
+          let elements = this.elements
+          let monster = {}
+          for (let i = 0; i < elements.length; i++) {
+            if (elements[i].type !== 'submit') {
+              monster[elements[i].dataset.prop] = elements[i].value
+            }
           }
-        }
-        let monsterName = monster.name.split(' ').join('')
-        monsterName = monsterName.toLowerCase()
-        if (monsterName !== '') {
+          let monsterName = monster.name.split(' ').join('')
+          monsterName = monsterName.toLowerCase()
+          if (monsterName !== '') {
+            let display = document.querySelector('.js-monsters-new')
+            display.style.display = (display.style.display === 'block') ? 'none' : 'block'
+            this.innerHTML = (this.innerHTML === 'Add Monster') ? 'Close' : 'Add Monster'
+            _updatemonster(monster, monsterName)
+          }
+        })
+        document.querySelector('.js-show-new-monster').addEventListener('click', function () {
+          console.log(this.innerHTML)
           let display = document.querySelector('.js-monsters-new')
           display.style.display = (display.style.display === 'block') ? 'none' : 'block'
           this.innerHTML = (this.innerHTML === 'Add Monster') ? 'Close' : 'Add Monster'
-          _updatemonster(monster, monsterName)
-        }
-      })
-      document.querySelector('.js-show-new-monster').addEventListener('click', function () {
-        console.log(this.innerHTML)
-        let display = document.querySelector('.js-monsters-new')
-        display.style.display = (display.style.display === 'block') ? 'none' : 'block'
-        this.innerHTML = (this.innerHTML === 'Add Monster') ? 'Close' : 'Add Monster'
-      })
+        })
+      } else {
+        let display = document.querySelector('.js-show-new-monster')
+        display.style.display = 'none'
+        
+        let borrar = document.querySelectorAll('.js-monster-delete')
+        borrar.forEach(boton => {
+          boton.style.display = 'none'
+        })
+      }
     })
   }
 

@@ -27,56 +27,67 @@ export const skillsApp = (response) => {
       })
       document.querySelector('.js-page-skills').style.display = 'block'
       document.querySelector('.js-skills-list').innerHTML = _printSkills()
-      document.querySelector('.js-skills-new').innerHTML = _newSkill()
 
-      document.querySelectorAll('.js-edit-skill').forEach(skill => {
-        skill.addEventListener('blur', function () {
-          console.log('update')
-          let skill = this.dataset.skill
-          let prop = this.dataset.prop
-          _skills[skill][prop] = this.innerHTML
-          _updateSkill(_skills[skill], skill)
+      if (window.sessionStorage.getItem("user")) {
+        document.querySelector('.js-skills-new').innerHTML = _newSkill()
+
+        document.querySelectorAll('.js-edit-skill').forEach(skill => {
+          skill.addEventListener('blur', function () {
+            console.log('update')
+            let skill = this.dataset.skill
+            let prop = this.dataset.prop
+            _skills[skill][prop] = this.innerHTML
+            _updateSkill(_skills[skill], skill)
+          })
         })
-      })
-      document.querySelectorAll('.js-edit-image').forEach(image => {
-        image.addEventListener('click', function () {
-          this.classList.add('hidden')
-          this.nextSibling.classList.remove('hidden')
+        document.querySelectorAll('.js-edit-image').forEach(image => {
+          image.addEventListener('click', function () {
+            this.classList.add('hidden')
+            this.nextSibling.classList.remove('hidden')
+          })
         })
-      })
-      document.querySelectorAll('.js-skill-delete').forEach(image => {
-        image.addEventListener('click', function () {
-          console.log('delete')
-          let id = this.dataset.skill
-          let database = firebase.database()
-          database.ref('skills/' + id).remove()
-          document.querySelector('.js-skills-list').innerHTML = _printSkills()
+        document.querySelectorAll('.js-skill-delete').forEach(image => {
+          image.addEventListener('click', function () {
+            console.log('delete')
+            let id = this.dataset.skill
+            let database = firebase.database()
+            database.ref('skills/' + id).remove()
+            document.querySelector('.js-skills-list').innerHTML = _printSkills()
+          })
         })
-      })
-      document.querySelector('.js-skill-form').addEventListener('submit', function (e) {
-        e.preventDefault()
-        let elements = this.elements
-        let skill = {}
-        for (let i = 0; i < elements.length; i++) {
-          if (elements[i].type !== 'submit') {
-            skill[elements[i].dataset.prop] = elements[i].value
+        document.querySelector('.js-skill-form').addEventListener('submit', function (e) {
+          e.preventDefault()
+          let elements = this.elements
+          let skill = {}
+          for (let i = 0; i < elements.length; i++) {
+            if (elements[i].type !== 'submit') {
+              skill[elements[i].dataset.prop] = elements[i].value
+            }
           }
-        }
-        let skillName = skill.name.split(' ').join('')
-        skillName = skillName.toLowerCase()
-        if (skillName !== '') {
+          let skillName = skill.name.split(' ').join('')
+          skillName = skillName.toLowerCase()
+          if (skillName !== '') {
+            let display = document.querySelector('.js-skills-new')
+            display.style.display = (display.style.display === 'block') ? 'none' : 'block'
+            this.innerHTML = (this.innerHTML === 'Add Skill') ? 'Close' : 'Add Skill'
+            _updateSkill(skill, skillName)
+          }
+        })
+        document.querySelector('.js-show-new-skill').addEventListener('click', function () {
+          console.log(this.innerHTML)
           let display = document.querySelector('.js-skills-new')
           display.style.display = (display.style.display === 'block') ? 'none' : 'block'
           this.innerHTML = (this.innerHTML === 'Add Skill') ? 'Close' : 'Add Skill'
-          _updateSkill(skill, skillName)
-        }
-      })
-      document.querySelector('.js-show-new-skill').addEventListener('click', function () {
-        console.log(this.innerHTML)
-        let display = document.querySelector('.js-skills-new')
-        display.style.display = (display.style.display === 'block') ? 'none' : 'block'
-        this.innerHTML = (this.innerHTML === 'Add Skill') ? 'Close' : 'Add Skill'
-      })
+        })
+      } else {
+        let display = document.querySelector('.js-show-new-skill')
+        display.style.display = 'none'
+        
+        let borrar = document.querySelectorAll('.js-skill-delete')
+        borrar.forEach(boton => {
+          boton.style.display = 'none'
+        })
+      }
     })
   }
 

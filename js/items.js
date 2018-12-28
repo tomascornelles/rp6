@@ -28,56 +28,67 @@ export const itemsApp = (response) => {
       })
       document.querySelector('.js-page-items').style.display = 'block'
       document.querySelector('.js-items-list').innerHTML = _printItems()
-      document.querySelector('.js-items-new').innerHTML = _newItem()
 
-      document.querySelectorAll('.js-edit-item').forEach(item => {
-        item.addEventListener('blur', function () {
-          console.log('update')
-          let item = this.dataset.item
-          let prop = this.dataset.prop
-          _items[item][prop] = this.innerHTML
-          _updateItem(_items[item], item)
+      if (window.sessionStorage.getItem("user")) {
+        document.querySelector('.js-items-new').innerHTML = _newItem()
+
+        document.querySelectorAll('.js-edit-item').forEach(item => {
+          item.addEventListener('blur', function () {
+            console.log('update')
+            let item = this.dataset.item
+            let prop = this.dataset.prop
+            _items[item][prop] = this.innerHTML
+            _updateItem(_items[item], item)
+          })
         })
-      })
-      document.querySelectorAll('.js-edit-image').forEach(image => {
-        image.addEventListener('click', function () {
-          this.classList.add('hidden')
-          this.nextSibling.classList.remove('hidden')
+        document.querySelectorAll('.js-edit-image').forEach(image => {
+          image.addEventListener('click', function () {
+            this.classList.add('hidden')
+            this.nextSibling.classList.remove('hidden')
+          })
         })
-      })
-      document.querySelectorAll('.js-item-delete').forEach(image => {
-        image.addEventListener('click', function () {
-          console.log('delete')
-          let id = this.dataset.item
-          let database = firebase.database()
-          database.ref('items/' + id).remove()
-          document.querySelector('.js-items-list').innerHTML = _printItems()
+        document.querySelectorAll('.js-item-delete').forEach(image => {
+          image.addEventListener('click', function () {
+            console.log('delete')
+            let id = this.dataset.item
+            let database = firebase.database()
+            database.ref('items/' + id).remove()
+            document.querySelector('.js-items-list').innerHTML = _printItems()
+          })
         })
-      })
-      document.querySelector('.js-item-form').addEventListener('submit', function (e) {
-        e.preventDefault()
-        let elements = this.elements
-        let item = {}
-        for (let i = 0; i < elements.length; i++) {
-          if (elements[i].type !== 'submit') {
-            item[elements[i].dataset.prop] = elements[i].value
+        document.querySelector('.js-item-form').addEventListener('submit', function (e) {
+          e.preventDefault()
+          let elements = this.elements
+          let item = {}
+          for (let i = 0; i < elements.length; i++) {
+            if (elements[i].type !== 'submit') {
+              item[elements[i].dataset.prop] = elements[i].value
+            }
           }
-        }
-        let itemName = item.name.split(' ').join('')
-        itemName = itemName.toLowerCase()
-        if (itemName !== '') {
+          let itemName = item.name.split(' ').join('')
+          itemName = itemName.toLowerCase()
+          if (itemName !== '') {
+            let display = document.querySelector('.js-items-new')
+            display.style.display = (display.style.display === 'block') ? 'none' : 'block'
+            this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
+            _updateItem(item, itemName)
+          }
+        })
+        document.querySelector('.js-show-new-item').addEventListener('click', function () {
+          console.log(this.innerHTML)
           let display = document.querySelector('.js-items-new')
           display.style.display = (display.style.display === 'block') ? 'none' : 'block'
           this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
-          _updateItem(item, itemName)
-        }
-      })
-      document.querySelector('.js-show-new-item').addEventListener('click', function () {
-        console.log(this.innerHTML)
-        let display = document.querySelector('.js-items-new')
-        display.style.display = (display.style.display === 'block') ? 'none' : 'block'
-        this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
-      })
+        })
+      } else {
+        let display = document.querySelector('.js-show-new-item')
+        display.style.display = 'none'
+        
+        let borrar = document.querySelectorAll('.js-item-delete')
+        borrar.forEach(boton => {
+          boton.style.display = 'none'
+        })
+      }
     })
   }
 
