@@ -86,7 +86,7 @@ export const pjApp = (response) => {
       <div class="items box">
         <h5>Equipamiento</h5>
         <p><img src="img/mo.gif"><span class="js-mo editable" contenteditable="true">${_pj.mo}</span> mo.</p>
-        ${_printItems()}
+        ${_printItems('pj')}
       </div>
       `
 
@@ -95,6 +95,9 @@ export const pjApp = (response) => {
     _container.append(_template)
     document.querySelector('.js-mo').addEventListener('blur', function () {
       _setMo(pj, this.innerHTML)
+    })
+    document.querySelector('.js-extraItems').addEventListener('blur', function () {
+      _setExtra(pj, this.innerHTML)
     })
   }
 
@@ -186,6 +189,11 @@ export const pjApp = (response) => {
     saveMessage(pj, message)
   }
 
+  const _setExtra = (pj, extra) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'extra': extra })
+  }
+
   const _printDefense = () => {
     let items = _pj.items.split(',')
     let defOut = 1
@@ -229,7 +237,7 @@ export const pjApp = (response) => {
     return skillsout
   }
 
-  const _printItems = () => {
+  const _printItems = (pj) => {
     let items = _pj.items.split(',')
     let itemsout = ''
     if (items[0] !== '') {
@@ -253,6 +261,10 @@ export const pjApp = (response) => {
         }
       }
     }
+    
+    itemsout += (pj)
+      ? `<div class="js-extraItems editable" contenteditable="true">${(typeof _pj.extra !== 'undefined') ? _pj.extra : ''}</div>`
+      : `<div>${(typeof _pj.extra !== 'undefined') ? _pj.extra : ''}</div>`
     return itemsout
   }
 

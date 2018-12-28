@@ -231,6 +231,8 @@ export const dmApp = (response) => {
     } else if (attr === 'pv') {
       database.ref().child('/characters/' + pj).update({ 'pv': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
+    } else if (attr === 'extra') {
+      database.ref().child('/characters/' + pj).update({ 'extra': val })
     }
     saveMessage('dm', message)
   }
@@ -356,6 +358,7 @@ export const dmApp = (response) => {
         }
       }
     }
+    itemsout += `<div class="js-edit-attr editable" contenteditable="true" data-pj="${pj}" data-attr="extra">${(typeof _pj.extra !== 'undefined') ? _pj.extra : ''}</div>`
     return itemsout
   }
 
