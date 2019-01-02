@@ -386,6 +386,19 @@ export const dmApp = (response) => {
     return select
   }
 
+  const _roomList = (pj) => {
+    let select = `<select class="js-room-select" data-pj="${pj}">`
+    select += `<option>Añadir Sala</option>`
+    console.log(_data)
+    for (const room in _data.campaigns.rooms) {
+      if (_data.campaigns.rooms.hasOwnProperty(room)) {
+        select += `<option value="${room}">${_data.campaigns.rooms[room].title} </option>`
+      }
+    }
+    select += '</select>'
+    return select
+  }
+
   const _chatDraw = (pj) => {
     let chat = _data.chat
     let container = document.querySelector('.js-chat-dm')
@@ -421,6 +434,7 @@ export const dmApp = (response) => {
         </select>
         ${_itemList()}
         ${_monsterList()}
+        ${_roomList()}
       </div>
       <div class="flex">
         <textarea class="js-message"></textarea>
@@ -474,6 +488,10 @@ export const dmApp = (response) => {
       let message = `<img src="${monster.icon}" width="36">
         <h3>${monster.name}</h3>
         ${print}`
+      saveMessage(pj, message)
+    })
+    document.querySelector('.js-form .js-room-select').addEventListener('change', function () {
+      let message = _data.campaigns.rooms[this.value].description
       saveMessage(pj, message)
     })
     let deleteButton = document.querySelectorAll('.js-chat-delete')
