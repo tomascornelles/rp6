@@ -391,7 +391,7 @@ export const dmApp = (response) => {
     select += `<option>Añadir Sala</option>`
     console.log(_data)
     for (const room in _data.campaigns.rooms) {
-      if (_data.campaigns.rooms.hasOwnProperty(room)) {
+      if (_data.campaigns.rooms.hasOwnProperty(room) && _data.campaigns.rooms[room].campaign === _data.campaigns.active) {
         select += `<option value="${room}">${_data.campaigns.rooms[room].title} </option>`
       }
     }
