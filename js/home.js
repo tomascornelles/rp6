@@ -1,3 +1,4 @@
+/* global sessionStorage */
 export const homeApp = () => {
   var firebase = require('firebase/app')
   let _pj = {}
@@ -64,7 +65,7 @@ export const homeApp = () => {
     _pj = _data.characters[pj]
     let _template = document.createElement('div')
     _template.classList.add('js-template')
-    if (_pj.token !== '' && _pj.token == sessionStorage.getItem(pj)) {
+    if (_pj.token !== '' && _pj.token.toString() === sessionStorage.getItem(pj)) {
       _template.classList.add('own')
     } else if (_pj.token !== '') {
       _template.classList.add('used')

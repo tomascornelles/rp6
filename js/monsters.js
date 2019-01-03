@@ -1,6 +1,6 @@
 export const monstersApp = (response) => {
   var firebase = require('firebase/app')
-  let _monsters, _data, _items
+  let _monsters, _data
 
   const _init = () => {
     require('firebase/database')
@@ -19,7 +19,6 @@ export const monstersApp = (response) => {
     database.ref('/').on('value', function (snapshot) {
       _data = snapshot.val()
       _monsters = _data.monsters
-      _items = _data.items
 
       let pages = document.querySelectorAll('.page')
       pages.forEach(page => {
@@ -27,8 +26,8 @@ export const monstersApp = (response) => {
       })
       document.querySelector('.js-page-monsters').style.display = 'block'
       document.querySelector('.js-monsters-list').innerHTML = _printMonsters()
-      
-      if (window.sessionStorage.getItem("user")) {
+
+      if (window.sessionStorage.getItem('user')) {
         document.querySelector('.js-monsters-new').innerHTML = _newMonster()
 
         document.querySelectorAll('.js-edit-monster').forEach(monster => {
@@ -82,7 +81,7 @@ export const monstersApp = (response) => {
       } else {
         let display = document.querySelector('.js-show-new-monster')
         display.style.display = 'none'
-        
+
         let borrar = document.querySelectorAll('.js-monster-delete')
         borrar.forEach(boton => {
           boton.style.display = 'none'

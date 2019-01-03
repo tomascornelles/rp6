@@ -1,3 +1,4 @@
+/* global sessionStorage */
 export const pjApp = (response) => {
   var firebase = require('firebase/app')
   let _pj = {}
@@ -152,8 +153,8 @@ export const pjApp = (response) => {
             <p><img src="img/mo.gif"> ${_pj.mo} mo.</p>
             ${_printItems()}
           </div>`
-          _container.append(_template)
-        }
+        _container.append(_template)
+      }
     }
 
     let more = document.querySelectorAll('.js-more-pj')
@@ -261,7 +262,7 @@ export const pjApp = (response) => {
         }
       }
     }
-    
+
     itemsout += (pj)
       ? `<div class="js-extraItems editable" contenteditable="true">${(typeof _pj.extra !== 'undefined') ? _pj.extra : ''}</div>`
       : `<div>${(typeof _pj.extra !== 'undefined') ? _pj.extra : ''}</div>`

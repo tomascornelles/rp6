@@ -1,6 +1,6 @@
 export const skillsApp = (response) => {
   var firebase = require('firebase/app')
-  let _skills, _items, _data
+  let _skills, _data
 
   const _init = () => {
     require('firebase/database')
@@ -18,7 +18,6 @@ export const skillsApp = (response) => {
 
     database.ref('/').on('value', function (snapshot) {
       _data = snapshot.val()
-      _items = _data.items
       _skills = _data.skills
 
       let pages = document.querySelectorAll('.page')
@@ -28,7 +27,7 @@ export const skillsApp = (response) => {
       document.querySelector('.js-page-skills').style.display = 'block'
       document.querySelector('.js-skills-list').innerHTML = _printSkills()
 
-      if (window.sessionStorage.getItem("user")) {
+      if (window.sessionStorage.getItem('user')) {
         document.querySelector('.js-skills-new').innerHTML = _newSkill()
 
         document.querySelectorAll('.js-edit-skill').forEach(skill => {
@@ -82,7 +81,7 @@ export const skillsApp = (response) => {
       } else {
         let display = document.querySelector('.js-show-new-skill')
         display.style.display = 'none'
-        
+
         let borrar = document.querySelectorAll('.js-skill-delete')
         borrar.forEach(boton => {
           boton.style.display = 'none'

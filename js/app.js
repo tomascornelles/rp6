@@ -5,7 +5,6 @@ var items = require('./items.js')
 var monsters = require('./monsters.js')
 var skills = require('./skills.js')
 var rooms = require('./rooms.js')
-// var session = require('./session')
 
 var page = require('page')
 
@@ -16,5 +15,4 @@ page('/library/monsters', monsters.monstersApp)
 page('/library/skills', skills.skillsApp)
 page('/library/rooms', rooms.roomsApp)
 page('/:pj', pj.pjApp)
-// page('/logout/:pj', session.logout)
 page()
