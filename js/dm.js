@@ -481,7 +481,8 @@ export const dmApp = (response) => {
       let monster = _data.monsters[this.value]
       let weapon = _items[monster.weapon]
       let print = ''
-      print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name} <span class="dm-only">(${weapon.dmg})</span><br>` : ''
+      print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name}<br>` : ''
+      print += `<span class="dm-only">Daño: ${weapon.dmg}<br></span>`
       print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
       print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
       print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''
@@ -491,7 +492,9 @@ export const dmApp = (response) => {
       saveMessage(pj, message)
     })
     document.querySelector('.js-form .js-room-select').addEventListener('change', function () {
-      let message = _data.campaigns.rooms[this.value].description
+      let message = `<img src="${_data.campaigns.rooms[this.value].img}">`
+      message += `<div>${_data.campaigns.rooms[this.value].description}</div>`
+      message += `<div class="dm-only">${_data.campaigns.rooms[this.value].dm}</div>`
       saveMessage(pj, message)
     })
     let deleteButton = document.querySelectorAll('.js-chat-delete')
