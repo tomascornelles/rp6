@@ -380,10 +380,8 @@ export const dmApp = (response) => {
     let select = `<select class="js-room-select" data-pj="${pj}">`
     select += `<option>Añadir Sala</option>`
     console.log(_data)
-    for (const room in _data.campaigns.rooms) {
-      if (_data.campaigns.rooms.hasOwnProperty(room) && _data.campaigns.rooms[room].campaign === _data.campaigns.active) {
-        select += `<option value="${room}">${_data.campaigns.rooms[room].title} </option>`
-      }
+    for (const room in _data.campaigns[_data.campaigns.active].rooms) {
+      select += `<option value="${room}">${_data.campaigns[_data.campaigns.active].rooms[room].title} </option>`
     }
     select += '</select>'
     return select

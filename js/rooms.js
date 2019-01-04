@@ -15,10 +15,11 @@ export const roomsApp = (response) => {
       firebase.initializeApp(config)
     }
     let database = firebase.database()
+    let selectCampaign = document.querySelector('.js-campaign')
 
     database.ref('/').on('value', function (snapshot) {
       _data = snapshot.val()
-      _rooms = _data.campaigns.rooms
+      _rooms = _data.campaigns[_data.campaigns.active].rooms
 
       let pages = document.querySelectorAll('.page')
       pages.forEach(page => {
@@ -27,11 +28,20 @@ export const roomsApp = (response) => {
       document.querySelector('.js-page-rooms').style.display = 'block'
       document.querySelector('.js-rooms-list').innerHTML = _printRooms()
 
-      if (window.sessionStorage.getItem("user")) {
+      if (window.sessionStorage.getItem('user')) {
         document.querySelector('.js-page-rooms').style.display = 'block'
         document.querySelector('.js-rooms-list').innerHTML = _printRooms()
         document.querySelector('.js-rooms-new').innerHTML = _newRoom()
 
+        document.querySelectorAll('.js-edit-campaign').forEach(room => {
+          room.addEventListener('blur', function () {
+            console.log('update')
+            let campaign = _data.campaigns.active
+            let prop = this.dataset.prop
+            let value = this.innerHTML
+            _updateCampaign(campaign, prop, value)
+          })
+        })
         document.querySelectorAll('.js-edit-room').forEach(room => {
           room.addEventListener('blur', function () {
             console.log('update')
@@ -73,6 +83,22 @@ export const roomsApp = (response) => {
       } else {
         window.location = '../dm'
       }
+
+      let options = ''
+      for (let campaign in _data.campaigns) {
+        let selected = (_data.campaigns.active === campaign) ? 'selected' : ''
+        if (campaign !== 'active') options += `<option value="${campaign}" ${selected}>${_data.campaigns[campaign].title}</option>`
+      }
+      document.querySelector('.js-campaign-title').innerHTML = _data.campaigns[_data.campaigns.active].title
+      document.querySelector('.js-campaign-date').innerHTML = _data.campaigns[_data.campaigns.active].date
+      document.querySelector('.js-campaign-author').innerHTML = _data.campaigns[_data.campaigns.active].author
+      document.querySelector('.js-campaign-title').dataset.campaign = _data.campaigns.active
+      document.querySelector('.js-campaign-date').dataset.campaign = _data.campaigns.active
+      document.querySelector('.js-campaign-author').dataset.campaign = _data.campaigns.active
+      selectCampaign.innerHTML = options
+      selectCampaign.addEventListener('change', function() {
+        _updateCampaign(_data.campaigns.active, 'active', this.value)
+      })
     })
 
     document.querySelector('.js-show-new-room').addEventListener('click', function () {
@@ -94,7 +120,7 @@ export const roomsApp = (response) => {
       print += (room.title !== '') ? `<td data-room="${_room}" data-prop="title" contenteditable="true" class="js-edit-room">${room.title}</td>` : '<td></td>'
       print += (room.description !== '') ? `<td data-room="${_room}" data-prop="description" contenteditable="true" class="js-edit-room">${room.description}</td>` : '<td></td>'
       print += (room.dm !== '') ? `<td data-room="${_room}" data-prop="dm" contenteditable="true" class="js-edit-room">${room.dm}</td>` : '<td></td>'
-      print += `<td><img src="${room.img}" style="width:auto; max-width:300px" class="js-edit-image"><span data-room="${_room}" data-prop="img" contenteditable="true" class="js-edit-room hidden">${room.img}</span></td>`
+      print += `<td><img src="${room.img}" style="width:auto; max-width:120px" class="js-edit-image"><span data-room="${_room}" data-prop="img" contenteditable="true" class="js-edit-room hidden">${room.img}</span></td>`
       print += `<td><button class="js-room-delete delete button button-outline" data-room="${_room}">Borrar</button></td>`
       print += `</tr>`
       roomsout += print
@@ -118,11 +144,23 @@ export const roomsApp = (response) => {
 
   const _updateRoom = (room, roomID) => {
     let database = firebase.database()
-    database.ref().child('/campaigns/rooms/' + roomID).update(room)
+    database.ref().child('/campaigns/' + _data.campaigns.active + '/rooms/' + roomID).update(room)
+  }
+
+  const _updateCampaign = (campaign, prop, value) => {
+    if (prop === 'active') {
+      let update = {'active': value}
+      let database = firebase.database()
+      database.ref().child('/campaigns').update(update)
+    } else {
+      let update = {[prop]: value}
+      let database = firebase.database()
+      database.ref().child('/campaigns/' + campaign).update(update)
+    }
   }
 
   const _replaceAll = (str, find, replace) => {
-    return str.replace(new RegExp(find, 'g'), replace);
+    return str.replace(new RegExp(find, 'g'), replace)
   }
 
   _init()

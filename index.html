@@ -97,10 +97,18 @@
     </section>
 
     <section class="page rooms js-page-rooms hidden">
-      <nav>
-        <button class="js-show-new-room">Add Room</button>
-        <a href="/dm" class="button button-outline">DM</a>
+      <nav class="row">
+        <div class="column"><button class="js-show-new-room">Add Room</button></div>
+        <div class="column"><select name="campaign" id="campaign" class="js-campaign"></select></div>
+        <div class="column"><a href="/dm" class="button button-outline">DM</a></div>
       </nav>
+      <div>
+        <h2 class="js-campaign-title js-edit-campaign" data-campaign="" data-prop="title" contenteditable="true"></h2>
+        <span class="js-campaign-date js-edit-campaign" data-campaign="" data-prop="date" contenteditable="true"></span><br>
+        <strong class="js-campaign-author js-edit-campaign" data-campaign="" data-prop="author" contenteditable="true"></strong>
+        <hr>
+      </div>
+      </div>
       <div class="new-room js-rooms-new"></div>
       <div class="js-rooms-list"></div>
     </section>
