@@ -112,14 +112,16 @@ export const roomsApp = (response) => {
   const _printRooms = () => {
     let roomsout = `<table>
                       </thead>
-                        <th>Campagin</th><th>Title</th><th>Description</th><th>DM Info</th><th>Image</th><th></th>`
+                        <th>Campagin</th><th>Title</th><th width="50%">Description</th><th>Image</th><th></th>`
     for (let _room in _rooms) {
       let room = _rooms[_room]
       let print = '<tr>'
       print += (room.campaign !== '') ? `<td data-room="${_room}" data-prop="campaign" contenteditable="true" class="js-edit-room">${room.campaign}</td>` : '<td></td>'
       print += (room.title !== '') ? `<td data-room="${_room}" data-prop="title" contenteditable="true" class="js-edit-room">${room.title}</td>` : '<td></td>'
-      print += (room.description !== '') ? `<td data-room="${_room}" data-prop="description" contenteditable="true" class="js-edit-room">${room.description}</td>` : '<td></td>'
-      print += (room.dm !== '') ? `<td data-room="${_room}" data-prop="dm" contenteditable="true" class="js-edit-room">${room.dm}</td>` : '<td></td>'
+      print += '<td>'
+      print += `<div data-room="${_room}" data-prop="description" contenteditable="true" class="js-edit-room">${room.description}</div>`
+      print += (room.dm !== '') ? `<div data-room="${_room}" data-prop="dm" contenteditable="true" class="js-edit-room dm-only">${room.dm}</div>` : ''
+      print += '</td>'
       print += `<td><img src="${room.img}" style="width:auto; max-width:120px" class="js-edit-image"><span data-room="${_room}" data-prop="img" contenteditable="true" class="js-edit-room hidden">${room.img}</span></td>`
       print += `<td><button class="js-room-delete delete button button-outline" data-room="${_room}">Borrar</button></td>`
       print += `</tr>`
