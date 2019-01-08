@@ -1,7 +1,6 @@
 export const itemsApp = (response) => {
   var firebase = require('firebase/app')
-  let _pj = {}
-  let _skills, _items, _data
+  let _items, _data
 
   const _init = () => {
     require('firebase/database')
@@ -20,7 +19,6 @@ export const itemsApp = (response) => {
     database.ref('/').on('value', function (snapshot) {
       _data = snapshot.val()
       _items = _data.items
-      _skills = _data.skills
 
       let pages = document.querySelectorAll('.page')
       pages.forEach(page => {
@@ -28,56 +26,67 @@ export const itemsApp = (response) => {
       })
       document.querySelector('.js-page-items').style.display = 'block'
       document.querySelector('.js-items-list').innerHTML = _printItems()
-      document.querySelector('.js-items-new').innerHTML = _newItem()
 
-      document.querySelectorAll('.js-edit-item').forEach(item => {
-        item.addEventListener('blur', function () {
-          console.log('update')
-          let item = this.dataset.item
-          let prop = this.dataset.prop
-          _items[item][prop] = this.innerHTML
-          _updateItem(_items[item], item)
+      if (window.sessionStorage.getItem('user')) {
+        document.querySelector('.js-items-new').innerHTML = _newItem()
+
+        document.querySelectorAll('.js-edit-item').forEach(item => {
+          item.addEventListener('blur', function () {
+            console.log('update')
+            let item = this.dataset.item
+            let prop = this.dataset.prop
+            _items[item][prop] = this.innerHTML
+            _updateItem(_items[item], item)
+          })
         })
-      })
-      document.querySelectorAll('.js-edit-image').forEach(image => {
-        image.addEventListener('click', function () {
-          this.classList.add('hidden')
-          this.nextSibling.classList.remove('hidden')
+        document.querySelectorAll('.js-edit-image').forEach(image => {
+          image.addEventListener('click', function () {
+            this.classList.add('hidden')
+            this.nextSibling.classList.remove('hidden')
+          })
         })
-      })
-      document.querySelectorAll('.js-item-delete').forEach(image => {
-        image.addEventListener('click', function () {
-          console.log('delete')
-          let id = this.dataset.item
-          let database = firebase.database()
-          database.ref('items/' + id).remove()
-          document.querySelector('.js-items-list').innerHTML = _printItems()
+        document.querySelectorAll('.js-item-delete').forEach(image => {
+          image.addEventListener('click', function () {
+            console.log('delete')
+            let id = this.dataset.item
+            let database = firebase.database()
+            database.ref('items/' + id).remove()
+            document.querySelector('.js-items-list').innerHTML = _printItems()
+          })
         })
-      })
-      document.querySelector('.js-item-form').addEventListener('submit', function (e) {
-        e.preventDefault()
-        let elements = this.elements
-        let item = {}
-        for (let i = 0; i < elements.length; i++) {
-          if (elements[i].type !== 'submit') {
-            item[elements[i].dataset.prop] = elements[i].value
+        document.querySelector('.js-item-form').addEventListener('submit', function (e) {
+          e.preventDefault()
+          let elements = this.elements
+          let item = {}
+          for (let i = 0; i < elements.length; i++) {
+            if (elements[i].type !== 'submit') {
+              item[elements[i].dataset.prop] = elements[i].value
+            }
           }
-        }
-        let itemName = item.name.split(' ').join('')
-        itemName = itemName.toLowerCase()
-        if (itemName !== '') {
+          let itemName = item.name.split(' ').join('')
+          itemName = itemName.toLowerCase()
+          if (itemName !== '') {
+            let display = document.querySelector('.js-items-new')
+            display.style.display = (display.style.display === 'block') ? 'none' : 'block'
+            this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
+            _updateItem(item, itemName)
+          }
+        })
+        document.querySelector('.js-show-new-item').addEventListener('click', function () {
+          console.log(this.innerHTML)
           let display = document.querySelector('.js-items-new')
           display.style.display = (display.style.display === 'block') ? 'none' : 'block'
           this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
-          _updateItem(item, itemName)
-        }
-      })
-      document.querySelector('.js-show-new-item').addEventListener('click', function () {
-        console.log(this.innerHTML)
-        let display = document.querySelector('.js-items-new')
-        display.style.display = (display.style.display === 'block') ? 'none' : 'block'
-        this.innerHTML = (this.innerHTML === 'Add Item') ? 'Close' : 'Add Item'
-      })
+        })
+      } else {
+        let display = document.querySelector('.js-show-new-item')
+        display.style.display = 'none'
+
+        let borrar = document.querySelectorAll('.js-item-delete')
+        borrar.forEach(boton => {
+          boton.style.display = 'none'
+        })
+      }
     })
   }
 
@@ -124,43 +133,6 @@ export const itemsApp = (response) => {
   const _updateItem = (item, itemName) => {
     let database = firebase.database()
     database.ref().child('/items/' + itemName).update(item)
-  }
-
-  const _itemList = (pj) => {
-    let select = `<select class="js-item-select" data-pj="${pj}">`
-    select += `<option>Añadir item</option>`
-    for (const item in _items) {
-      if (_items.hasOwnProperty(item)) {
-        const element = _items[item]
-        select += `<option value="${item}">${_items[item].name}</option>`
-      }
-    }
-    select += '</select>'
-    return select
-  }
-
-  const _addItem = (pj, i) => {
-    let items = _data.characters[pj].items
-    if (items === '') {
-      items = i
-    } else {
-      items = items.split(',')
-      items.push(i)
-      items = items.join(',')
-    }
-    let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'items': items })
-  }
-
-  const _removeItem = (pj, i) => {
-    let items = []
-    let items_init = _data.characters[pj].items.split(',')
-    for (let a = 0; a < items_init.length; a++) {
-      if (items_init[a] !== i) items.push(items_init[a])
-    }
-    items = items.join(',')
-    let database = firebase.database()
-    database.ref().child('/characters/' + pj).update({ 'items': items })
   }
 
   _init()

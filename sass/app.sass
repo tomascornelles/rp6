@@ -9,6 +9,7 @@
 .editable
   border-bottom: 1px solid #999
   padding: .1em .5em
+  background: rgba(255,255,255,.5)
 
 .box
   border: 1px solid #999999
@@ -305,6 +306,14 @@
   width: 25%
   height: 90vh
   overflow: auto
+  
+  .barra 
+    height: 5px
+    background: #c00
+    margin-bottom: 5px
+    .vida
+      height: 5px
+      background: #093
 
   & > div
     overflow: hidden
@@ -316,7 +325,7 @@
     box-sizing: border-box
     font-weight: 700
     min-width: 100%
-    height: 3.7em
+    height: 4.5em
     margin-bottom: 0
     box-shadow: none
     border-radius: 0
@@ -339,10 +348,9 @@
 
     .img
       float: left
-      height: 48px
-      width: 48px
+      height: 64px
+      width: 64px
       margin-right: 0.5em
-      margin-left: 0.5em
       text-align: center
       img
         max-width: 100%
@@ -418,6 +426,11 @@
       padding: 0.5em
   
 
+.dm-only 
+  display: block
+  background: #eee
+  padding: 0.5em
+  
 .dm 
   .chat
     width: 75%
@@ -431,7 +444,9 @@
         border: 3px dashed #eee
       
       .dm-only 
-        display: inline
+        display: block
+        background: #eee
+        padding: 0.5em
 
     .chat-delete
       position: absolute
@@ -447,7 +462,6 @@
       
   .list
     .disabled
-      opacity: .4
       background: #ccc
       border: 0
     & > div 
@@ -493,7 +507,7 @@
         order: 2
         max-width: 100%
 
-.new-item, .new-monster, .new-skill
+.new-item, .new-monster, .new-skill, .new-room
   max-width: 600px
   margin: auto
   padding: 1em
@@ -510,3 +524,6 @@ nav
   
   button
     float: left
+
+td
+  vertical-align: top

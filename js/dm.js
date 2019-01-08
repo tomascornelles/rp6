@@ -22,65 +22,38 @@ export const dmApp = (response) => {
       _items = _data.items
       _skills = _data.skills
 
-      _listPJs()
-      _chatDraw('dm')
-
-      let pages = document.querySelectorAll('.page')
-      pages.forEach(page => {
-        page.style.display = 'none'
-      })
-      document.querySelector('.js-page-dm').style.display = 'block'
+      if (window.sessionStorage.getItem('user')) {
+        _listPJs()
+        _chatDraw('dm')
+        let pages = document.querySelectorAll('.page')
+        pages.forEach(page => {
+          page.style.display = 'none'
+        })
+        document.querySelector('.js-page-dm').style.display = 'block'
+      } else {
+        let pages = document.querySelectorAll('.page')
+        pages.forEach(page => {
+          page.style.display = 'none'
+        })
+        document.querySelector('.js-page-login').style.display = 'block'
+        _printLogin()
+      }
     })
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
   }
 
-  const _loadPJ = (pj) => {
-    _pj = _data.characters[pj]
-    let _template = document.createElement('div')
-    _template.classList.add('js-template')
-    _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
-      <div class="name">
-        <h4>${_pj.name}</h4>
-      </div>
-      <div class="class">
-        <p>${_pj.class}</p>
-      </div>
-      <div class="race">
-        <p>${_pj.race}</p>
-        <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
-      </div>
-      <div class="table">
-        <table>
-          <thead>
-            <tr>
-              <th>Fue</th>
-              <th>Men</th>
-              <th>Def</th>
-              <th>PV</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>${_pj.force}</td>
-              <td>${_pj.mind}</td>
-              <td>${_printDefense()}</td>
-              <td>${_printPv()} / ${_pj.pv}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="skills">
-        <h5>Habilidades</h5>${_printSkills()}
-      </div>
-      <div class="items">
-        <h5>Equipamiento</h5>${_printItems()}
-      </div>
-      `
+  const _printLogin = () => {
+    let user = document.querySelector('.js-login-user')
+    let pass = document.querySelector('.js-login-pass')
+    let submit = document.querySelector('.js-login-submit')
 
-    let _container = document.querySelector('.js-sheet')
-    _container.innerHTML = ''
-    _container.append(_template)
+    submit.addEventListener('click', function () {
+      if (_data.users[user.value].pass === pass.value) {
+        window.sessionStorage.setItem('user', user.value)
+        window.location = '/dm'
+      }
+    })
   }
 
   const _listPJs = () => {
@@ -90,60 +63,58 @@ export const dmApp = (response) => {
 
     for (let pj in pjs) {
       _pj = _data.characters[pj]
-      if (true || _pj.token !== '' || _pj.type === 'pnj') {
-        let _template = document.createElement('div')
-        _template.classList.add('js-template')
-        if (!_pj.visible) _template.classList.add('disabled')
-        _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></div>
-        <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
-        <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
-          <div class="name">
-            <h4>${_pj.name}</h4>
-          </div>
-          <div class="class">
-            <p>${_pj.class}</p>
-          </div>
-          <div class="race">
-            <p>${_pj.race}</p>
-          </div>
-          <div class="table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Fue</th>
-                  <th>Men</th>
-                  <th>Def</th>
-                  <th>PV</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="js-edit-attr" data-pj="${pj}" data-attr="force" contenteditable="true">${_pj.force}</span></td>
-                  <td><span class="js-edit-attr" data-pj="${pj}" data-attr="mind" contenteditable="true">${_pj.mind}</span></td>
-                  <td>${_printDefense()}</td>
-                  <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr" data-pj="${pj}" data-attr="pv" contenteditable="true">${_pj.pv}</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="skills box">
-            <h5>Habilidades</h5>
-            ${_printSkills(pj)}
-            <div class="js-skill-list">${_skillList(pj)}</div>
-          </div>
-          <div class="items box">
-            <h5>Equipamiento</h5>
-            <p><span class="js-edit-attr" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span> mo.</p>
-            ${_printItems(pj)}
-            <div class="js-item-list">${_itemList(pj)}</div>
-          </div>
-          <div class="actions">
-            <button class="js-remove-token" data-pj="${pj}">Quitar Token</button>
-            <button class="js-toggle-visible" data-pj="${pj}">Mostrar/Ocultar</button>
-          </div>`
+      let _template = document.createElement('div')
+      _template.classList.add('js-template')
+      if (!_pj.visible) _template.classList.add('disabled')
+      _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+      <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
+      <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
+        <div class="name">
+          <h4>${_pj.name}</h4>
+        </div>
+        <div class="class">
+          <p>${_pj.class}</p>
+        </div>
+        <div class="race">
+          <p>${_pj.race}</p>
+        </div>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>Fue</th>
+                <th>Men</th>
+                <th>Def</th>
+                <th>PV</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="force" contenteditable="true">${_pj.force}</span></td>
+                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="mind" contenteditable="true">${_pj.mind}</span></td>
+                <td>${_printDefense()}</td>
+                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr" data-pj="${pj}" data-attr="pv" contenteditable="true">${_pj.pv}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="skills box">
+          <h5>Habilidades</h5>
+          ${_printSkills(pj)}
+          <div class="js-skill-list">${_skillList(pj)}</div>
+        </div>
+        <div class="items box">
+          <h5>Equipamiento</h5>
+          <p><span class="js-edit-attr" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span> mo.</p>
+          ${_printItems(pj)}
+          <div class="js-item-list">${_itemList(pj)}</div>
+        </div>
+        <div class="actions">
+          <button class="js-remove-token" data-pj="${pj}">Quitar Token</button>
+          <button class="js-toggle-visible" data-pj="${pj}">Mostrar/Ocultar</button>
+        </div>`
 
-        _container.append(_template)
-      }
+      _container.append(_template)
 
       let _mo = document.querySelectorAll('.js-edit-attr')
       _mo.forEach(item => {
@@ -231,6 +202,8 @@ export const dmApp = (response) => {
     } else if (attr === 'pv') {
       database.ref().child('/characters/' + pj).update({ 'pv': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
+    } else if (attr === 'extra') {
+      database.ref().child('/characters/' + pj).update({ 'extra': val })
     }
     saveMessage('dm', message)
   }
@@ -261,10 +234,6 @@ export const dmApp = (response) => {
       }
     }
     return defOut
-  }
-
-  const _printPv = () => {
-    return parseFloat(_pj.pv) - parseFloat(_pj.dmg)
   }
 
   const _barPv = () => {
@@ -299,7 +268,6 @@ export const dmApp = (response) => {
     select += `<option>Añadir skill</option>`
     for (const skill in _skills) {
       if (_skills.hasOwnProperty(skill)) {
-        const element = _skills[skill]
         select += `<option value="${skill}">${_skills[skill].name}</option>`
       }
     }
@@ -323,9 +291,9 @@ export const dmApp = (response) => {
   const _removeSkill = (pj, i) => {
     console.log(pj)
     let skills = []
-    let skills_init = _data.characters[pj].skills.split(',')
-    for (let a = 0; a < skills_init.length; a++) {
-      if (skills_init[a] !== i) skills.push(skills_init[a])
+    let skillsInit = _data.characters[pj].skills.split(',')
+    for (let a = 0; a < skillsInit.length; a++) {
+      if (skillsInit[a] !== i) skills.push(skillsInit[a])
     }
     skills = skills.join(',')
     let database = firebase.database()
@@ -356,6 +324,7 @@ export const dmApp = (response) => {
         }
       }
     }
+    itemsout += `<div class="js-edit-attr editable" contenteditable="true" data-pj="${pj}" data-attr="extra">${(typeof _pj.extra !== 'undefined') ? _pj.extra : ''}</div>`
     return itemsout
   }
 
@@ -364,7 +333,6 @@ export const dmApp = (response) => {
     select += `<option>Añadir item</option>`
     for (const item in _items) {
       if (_items.hasOwnProperty(item)) {
-        const element = _items[item]
         select += `<option value="${item}">${_items[item].name}</option>`
       }
     }
@@ -387,9 +355,9 @@ export const dmApp = (response) => {
 
   const _removeItem = (pj, i) => {
     let items = []
-    let items_init = _data.characters[pj].items.split(',')
-    for (let a = 0; a < items_init.length; a++) {
-      if (items_init[a] !== i) items.push(items_init[a])
+    let itemsInit = _data.characters[pj].items.split(',')
+    for (let a = 0; a < itemsInit.length; a++) {
+      if (itemsInit[a] !== i) items.push(itemsInit[a])
     }
     items = items.join(',')
     let database = firebase.database()
@@ -403,6 +371,17 @@ export const dmApp = (response) => {
       if (_data.monsters.hasOwnProperty(monster)) {
         select += `<option value="${monster}">${_data.monsters[monster].name} (${_items[_data.monsters[monster].weapon].name})</option>`
       }
+    }
+    select += '</select>'
+    return select
+  }
+
+  const _roomList = (pj) => {
+    let select = `<select class="js-room-select" data-pj="${pj}">`
+    select += `<option>Añadir Sala</option>`
+    console.log(_data)
+    for (const room in _data.campaigns[_data.campaigns.active].rooms) {
+      select += `<option value="${room}">${_data.campaigns[_data.campaigns.active].rooms[room].title} </option>`
     }
     select += '</select>'
     return select
@@ -443,6 +422,7 @@ export const dmApp = (response) => {
         </select>
         ${_itemList()}
         ${_monsterList()}
+        ${_roomList()}
       </div>
       <div class="flex">
         <textarea class="js-message"></textarea>
@@ -489,13 +469,20 @@ export const dmApp = (response) => {
       let monster = _data.monsters[this.value]
       let weapon = _items[monster.weapon]
       let print = ''
-      print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name} <span class="dm-only">(${weapon.dmg})</span><br>` : ''
+      print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name}<br>` : ''
+      print += `<span class="dm-only">Daño: ${weapon.dmg}<br></span>`
       print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
       print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
       print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''
       let message = `<img src="${monster.icon}" width="36">
         <h3>${monster.name}</h3>
         ${print}`
+      saveMessage(pj, message)
+    })
+    document.querySelector('.js-form .js-room-select').addEventListener('change', function () {
+      let message = `<img src="${_data.campaigns.rooms[this.value].img}">`
+      message += `<div>${_data.campaigns.rooms[this.value].description}</div>`
+      message += `<div class="dm-only">${_data.campaigns.rooms[this.value].dm}</div>`
       saveMessage(pj, message)
     })
     let deleteButton = document.querySelectorAll('.js-chat-delete')
