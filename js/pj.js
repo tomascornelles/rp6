@@ -109,6 +109,7 @@ export const pjApp = (response) => {
         let _template = document.createElement('div')
         _template.classList.add('js-template')
         _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+        <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
         <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
           <div class="name">
             <h4>${_pj.name}</h4>
@@ -118,7 +119,6 @@ export const pjApp = (response) => {
           </div>
           <div class="race">
             <p>${_pj.race}</p>
-            <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
           </div>
           <div class="table">
             <table>

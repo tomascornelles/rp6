@@ -94,7 +94,7 @@ export const dmApp = (response) => {
         let _template = document.createElement('div')
         _template.classList.add('js-template')
         if (!_pj.visible) _template.classList.add('disabled')
-        _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+        _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></div>
         <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
         <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
           <div class="name">
