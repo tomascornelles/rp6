@@ -89,6 +89,7 @@ export const homeApp = () => {
           <thead>
             <tr>
               <th>Fuerza</th>
+              <th>Destreza</th>
               <th>Mente</th>
               <th>Defensa</th>
               <th>Vida</th>
@@ -97,6 +98,7 @@ export const homeApp = () => {
           <tbody>
             <tr>
               <td>${_pj.force}</td>
+              <td>${_pj.dex}</td>
               <td>${_pj.mind}</td>
               <td>${_printDefense()}</td>
               <td>${_pj.pv}</td>
@@ -161,8 +163,8 @@ export const homeApp = () => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
+          print += (item.def !== '') ? `<strong>Bonus defensa:</strong> +${item.def}<br>` : ''
+          print += (item.dmg !== '') ? `<strong>Bonus ataque:</strong> +${item.dmg}<br>` : ''
           print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
           print += (item.hands !== '')
             ? (item.hands === '1')

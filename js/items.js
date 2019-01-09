@@ -118,8 +118,8 @@ export const itemsApp = (response) => {
     let form = `<form action="" class="js-item-form">
     <input type="text" placeholder="Name" data-prop="name" name="name">
     <input type="text" placeholder="Image" data-prop="icon" name="icon">
-    <input type="text" placeholder="Def" data-prop="def" name="def">
-    <input type="text" placeholder="Dmg" data-prop="dmg" name="dmg">
+    <input type="text" placeholder="Bonus defense" data-prop="def" name="def">
+    <input type="text" placeholder="Bonus attack" data-prop="dmg" name="dmg">
     <input type="text" placeholder="Range" data-prop="range" name="range">
     <input type="text" placeholder="Hands" data-prop="hands" name="hands">
     <input type="text" placeholder="Price" data-prop="price" name="price">

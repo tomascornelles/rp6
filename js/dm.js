@@ -83,6 +83,7 @@ export const dmApp = (response) => {
             <thead>
               <tr>
                 <th>Fue</th>
+                <th>Des</th>
                 <th>Men</th>
                 <th>Def</th>
                 <th>PV</th>
@@ -91,6 +92,7 @@ export const dmApp = (response) => {
             <tbody>
               <tr>
                 <td><span class="js-edit-attr" data-pj="${pj}" data-attr="force" contenteditable="true">${_pj.force}</span></td>
+                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dex" contenteditable="true">${_pj.dex}</span></td>
                 <td><span class="js-edit-attr" data-pj="${pj}" data-attr="mind" contenteditable="true">${_pj.mind}</span></td>
                 <td>${_printDefense()}</td>
                 <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr" data-pj="${pj}" data-attr="pv" contenteditable="true">${_pj.pv}</span></td>
@@ -193,6 +195,9 @@ export const dmApp = (response) => {
     } else if (attr === 'force') {
       database.ref().child('/characters/' + pj).update({ 'force': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de fuerza.`
+    } else if (attr === 'dex') {
+      database.ref().child('/characters/' + pj).update({ 'dex': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val} puntos de destreza.`
     } else if (attr === 'mind') {
       database.ref().child('/characters/' + pj).update({ 'mind': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de mente.`
@@ -308,8 +313,8 @@ export const dmApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
+          print += (item.def !== '') ? `<strong>Bonus defensa:</strong> +${item.def}<br>` : ''
+          print += (item.dmg !== '') ? `<strong>Bonus ataque:</strong> +${item.dmg}<br>` : ''
           print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
           print += (item.hands !== '')
             ? (item.hands === '1')

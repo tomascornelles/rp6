@@ -65,6 +65,7 @@ export const pjApp = (response) => {
           <thead>
             <tr>
               <th>Fue</th>
+              <th>Des</th>
               <th>Men</th>
               <th>Def</th>
               <th>PV</th>
@@ -73,6 +74,7 @@ export const pjApp = (response) => {
           <tbody>
             <tr>
               <td>${_pj.force}</td>
+              <td>${_pj.dex}</td>
               <td>${_pj.mind}</td>
               <td>${_printDefense()}</td>
               <td>${_printPv()} / ${_pj.pv}</td>
@@ -129,6 +131,7 @@ export const pjApp = (response) => {
               <thead>
                 <tr>
                   <th>Fue</th>
+                  <th>Des</th>
                   <th>Men</th>
                   <th>Def</th>
                   <th>PV</th>
@@ -137,6 +140,7 @@ export const pjApp = (response) => {
               <tbody>
                 <tr>
                   <td>${_pj.force}</td>
+                  <td>${_pj.dex}</td>
                   <td>${_pj.mind}</td>
                   <td>${_printDefense()}</td>
                   <td>${_printPv()} / ${_pj.pv}</td>
@@ -197,7 +201,7 @@ export const pjApp = (response) => {
 
   const _printDefense = () => {
     let items = _pj.items.split(',')
-    let defOut = 1
+    let defOut = _pj.force * 1
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
@@ -246,8 +250,8 @@ export const pjApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
+          print += (item.def !== '') ? `<strong>Bonus defensa:</strong> +${item.def}<br>` : ''
+          print += (item.dmg !== '') ? `<strong>Bonus ataque:</strong> +${item.dmg}<br>` : ''
           print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
           print += (item.hands !== '')
             ? (item.hands === '1')
