@@ -93,17 +93,16 @@ export const itemsApp = (response) => {
   const _printItems = () => {
     let itemsout = `<table>
                       </thead>
-                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Range</th><th>Hands</th><th>Price</th><th>Type</th><th></th>`
+                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Hands</th><th>Price</th><th>Type</th><th></th>`
     for (let _item in _items) {
       let item = _items[_item]
       let print = '<tr>'
       print += `<td><img src="${item.icon}" height="20" class="js-edit-image"><span data-item="${_item}" data-prop="icon" contenteditable="true" class="js-edit-item hidden">${item.icon}</span></td>`
       print += `<td>${_item}</td>`
       print += `<td data-item="${_item}" data-prop="name" contenteditable="true" class="js-edit-item">${item.name}</td>`
-      print += (item.def !== '') ? `<td data-item="${_item}" data-prop="def" contenteditable="true" class="js-edit-item">${item.def}</td>` : '<td></td>'
-      print += (item.dmg !== '') ? `<td data-item="${_item}" data-prop="dmg" contenteditable="true" class="js-edit-item">${item.dmg}</td>` : '<td></td>'
-      print += (item.range !== '') ? `<td data-item="${_item}" data-prop="range" contenteditable="true" class="js-edit-item">${item.range}</td>` : '<td></td>'
-      print += (item.hands !== '') ? `<td data-item="${_item}" data-prop="hands" contenteditable="true" class="js-edit-item">${item.hands}</td>` : '<td></td>'
+      print += (item.bd !== '') ? `<td data-item="${_item}" data-prop="bd" contenteditable="true" class="js-edit-item">${item.bd}</td>` : '<td></td>'
+      print += (item.ba !== '') ? `<td data-item="${_item}" data-prop="ba" contenteditable="true" class="js-edit-item">${item.ba}</td>` : '<td></td>'
+      print += (item.notes !== '') ? `<td data-item="${_item}" data-prop="notes" contenteditable="true" class="js-edit-item">${item.notes}</td>` : '<td></td>'
       print += (item.price !== '') ? `<td data-item="${_item}" data-prop="price" contenteditable="true" class="js-edit-item">${item.price}</td>` : '<td></td>'
       print += (item.type !== '') ? `<td data-item="${_item}" data-prop="type" contenteditable="true" class="js-edit-item">${item.type}</td>` : '<td></td>'
       print += `<td><button class="js-item-delete delete button button-outline" data-item="${_item}">Borrar</button></td>`
@@ -118,10 +117,9 @@ export const itemsApp = (response) => {
     let form = `<form action="" class="js-item-form">
     <input type="text" placeholder="Name" data-prop="name" name="name">
     <input type="text" placeholder="Image" data-prop="icon" name="icon">
-    <input type="text" placeholder="Def" data-prop="def" name="def">
-    <input type="text" placeholder="Dmg" data-prop="dmg" name="dmg">
-    <input type="text" placeholder="Range" data-prop="range" name="range">
-    <input type="text" placeholder="Hands" data-prop="hands" name="hands">
+    <input type="text" placeholder="Bonus defense" data-prop="def" name="def">
+    <input type="text" placeholder="Bonus attack" data-prop="dmg" name="dmg">
+    <input type="text" placeholder="Notes" data-prop="notes" name="notes">
     <input type="text" placeholder="Price" data-prop="price" name="price">
     <input type="text" placeholder="Type" data-prop="type" name="type">
     <input type="submit" value="Save" class="js-item-save">

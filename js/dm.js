@@ -22,6 +22,9 @@ export const dmApp = (response) => {
       _items = _data.items
       _skills = _data.skills
 
+      document.querySelector('.bg').classList.remove('light', 'dark', 'dawn', 'forest', 'day', 'night', 'dungeon', 'treasure')
+      document.querySelector('.bg').classList.add(_data.campaigns[_data.campaigns.active].bg)
+
       if (window.sessionStorage.getItem('user')) {
         _listPJs()
         _chatDraw('dm')
@@ -38,6 +41,11 @@ export const dmApp = (response) => {
         document.querySelector('.js-page-login').style.display = 'block'
         _printLogin()
       }
+    })
+
+    document.querySelector('.js-ambient').addEventListener('change', function () {
+      let database = firebase.database()
+      database.ref().child('/campaigns/' + [_data.campaigns.active]).update({ 'bg': this.value })
     })
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
@@ -83,6 +91,7 @@ export const dmApp = (response) => {
             <thead>
               <tr>
                 <th>Fue</th>
+                <th>Des</th>
                 <th>Men</th>
                 <th>Def</th>
                 <th>PV</th>
@@ -91,12 +100,18 @@ export const dmApp = (response) => {
             <tbody>
               <tr>
                 <td><span class="js-edit-attr" data-pj="${pj}" data-attr="force" contenteditable="true">${_pj.force}</span></td>
+                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dex" contenteditable="true">${_pj.dex}</span></td>
                 <td><span class="js-edit-attr" data-pj="${pj}" data-attr="mind" contenteditable="true">${_pj.mind}</span></td>
                 <td>${_printDefense()}</td>
-                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr" data-pj="${pj}" data-attr="pv" contenteditable="true">${_pj.pv}</span></td>
+                <td><span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr" data-pj="${pj}" data-attr="pv" contenteditable="true">${_getPV(_pj.force)}</span></td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="talent box">
+          <h5>Talento</h5>
+          ${_printTalent()}
+          <div class="js-talent-list">${_talentList(pj)}</div>
         </div>
         <div class="skills box">
           <h5>Habilidades</h5>
@@ -105,7 +120,7 @@ export const dmApp = (response) => {
         </div>
         <div class="items box">
           <h5>Equipamiento</h5>
-          <p><span class="js-edit-attr" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span> mo.</p>
+          <p><span class="js-edit-attr" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span></p>
           ${_printItems(pj)}
           <div class="js-item-list">${_itemList(pj)}</div>
         </div>
@@ -119,7 +134,6 @@ export const dmApp = (response) => {
       let _mo = document.querySelectorAll('.js-edit-attr')
       _mo.forEach(item => {
         item.addEventListener('blur', function () {
-          console.log(this.dataset.pj, this.dataset.attr, this.innerHTML)
           _setAttr(this.dataset.pj, this.dataset.attr, this.innerHTML)
         })
       })
@@ -156,6 +170,12 @@ export const dmApp = (response) => {
       }, false)
     })
 
+    let talentSelect = document.querySelectorAll('.js-talent-select')
+    talentSelect.forEach(talent => {
+      talent.addEventListener('change', function () {
+        _addTalent(this.dataset.pj, this.value)
+      })
+    })
     let skillSelect = document.querySelectorAll('.js-skill-select')
     skillSelect.forEach(skill => {
       skill.addEventListener('change', function () {
@@ -189,15 +209,18 @@ export const dmApp = (response) => {
     let message = ''
     if (attr === 'mo') {
       database.ref().child('/characters/' + pj).update({ 'mo': val })
-      message = `${_data.characters[pj].name} ahora tiene ${val}mo.`
+      message = `${_data.characters[pj].name} ahora tiene ${val}.`
     } else if (attr === 'force') {
       database.ref().child('/characters/' + pj).update({ 'force': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de fuerza.`
+    } else if (attr === 'dex') {
+      database.ref().child('/characters/' + pj).update({ 'dex': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val} puntos de destreza.`
     } else if (attr === 'mind') {
       database.ref().child('/characters/' + pj).update({ 'mind': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de mente.`
     } else if (attr === 'dmg') {
-      message = `A ${_data.characters[pj].name} le quedan ${val - _data.characters[pj].pv} puntos de vida.`
+      message = `A ${_data.characters[pj].name} le quedan ${_getPV(_data.characters[pj].force)*1 - val*1} puntos de vida.`
       database.ref().child('/characters/' + pj).update({ 'dmg': val })
     } else if (attr === 'pv') {
       database.ref().child('/characters/' + pj).update({ 'pv': val })
@@ -216,7 +239,6 @@ export const dmApp = (response) => {
   const _toggleVisible = (pj) => {
     let database = firebase.database()
     let character = _data.characters[pj]
-    console.log(character)
     let message = `<h4>Se incorpora al grupo:</h4>
     <img src="img/${pj}.png" width="96">
       <h3>${character.name}</h3>`
@@ -230,14 +252,47 @@ export const dmApp = (response) => {
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (item.def) defOut += parseFloat(item.def)
+        if (item.bd !== '') defOut += parseFloat(item.bd)
       }
     }
     return defOut
   }
 
   const _barPv = () => {
-    return (parseFloat(_pj.pv) - parseFloat(_pj.dmg)) / parseFloat(_pj.pv) * 100
+    return (parseFloat(_getPV(_pj.force) - parseFloat(_pj.dmg)) / parseFloat(_getPV(_pj.force))) * 100
+  }
+
+  const _getPV = (f) => {
+    return (10 + 10 * f)
+  }
+
+  const _printTalent = () => {
+    let talent = _data.talents[_pj.talent]
+    let print = (talent)
+      ? `<div class="js-info">
+        <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
+        <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}</label>
+        <div class="js-info-text">${talent.desc}</div>
+      </div>`
+      : ''
+    return print
+  }
+
+  const _talentList = (pj) => {
+    let select = `<select class="js-talent-select" data-pj="${pj}">`
+    select += `<option>Añadir talento</option>`
+    for (const talent in _data.talents) {
+      if (_data.talents.hasOwnProperty(talent)) {
+        select += `<option value="${talent}">${_data.talents[talent].name}</option>`
+      }
+    }
+    select += '</select>'
+    return select
+  }
+
+  const _addTalent = (pj, i) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'talent': i })
   }
 
   const _printSkills = (pj) => {
@@ -248,9 +303,10 @@ export const dmApp = (response) => {
         let skill = _skills[skills[i].trim()]
         if (typeof skill !== 'undefined') {
           let print = ''
-          print += (skill.activation !== '') ? `<strong>Activación:</strong>${skill.activation}<br>` : ''
-          print += (skill.cost !== '') ? `<strong>Coste:</strong>${skill.cost}<br>` : ''
-          print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
+          print += (skill.bm !== '+0') ? `<strong>Bonus:</strong>${skill.bm}<br>` : ''
+          print += (skill.range !== '') ? `<strong>Rango:</strong>${skill.range}<br>` : ''
+          print += (skill.pause !== '') ? `<strong>Pausa:</strong>${skill.pause}<br>` : ''
+          print += (skill.desc !== '') ? `<strong>Descripción:</strong><br>${skill.desc}<br>` : ''
 
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
@@ -289,7 +345,6 @@ export const dmApp = (response) => {
   }
 
   const _removeSkill = (pj, i) => {
-    console.log(pj)
     let skills = []
     let skillsInit = _data.characters[pj].skills.split(',')
     for (let a = 0; a < skillsInit.length; a++) {
@@ -308,14 +363,9 @@ export const dmApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
-          print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
-          print += (item.hands !== '')
-            ? (item.hands === '1')
-              ? '1 mano'
-              : '2 manos'
-            : ''
+          print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
+          print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
+          print += (item.notes !== '') ? `<strong>Notas:</strong> ${item.notes}<br>` : ''
           itemsout += `<div class="js-info">
             <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
             <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove delete button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
@@ -369,7 +419,7 @@ export const dmApp = (response) => {
     select += `<option>Añadir criatura</option>`
     for (const monster in _data.monsters) {
       if (_data.monsters.hasOwnProperty(monster)) {
-        select += `<option value="${monster}">${_data.monsters[monster].name} (${_items[_data.monsters[monster].weapon].name})</option>`
+        select += `<option value="${monster}">${_data.monsters[monster].name} (${_data.monsters[monster].mele}/${_data.monsters[monster].dist}) / (${_data.monsters[monster].def}/${_data.monsters[monster].pv})</option>`
       }
     }
     select += '</select>'
@@ -379,7 +429,6 @@ export const dmApp = (response) => {
   const _roomList = (pj) => {
     let select = `<select class="js-room-select" data-pj="${pj}">`
     select += `<option>Añadir Sala</option>`
-    console.log(_data)
     for (const room in _data.campaigns[_data.campaigns.active].rooms) {
       select += `<option value="${room}">${_data.campaigns[_data.campaigns.active].rooms[room].title} </option>`
     }
@@ -407,19 +456,7 @@ export const dmApp = (response) => {
     let chatBox = document.createElement('div')
     chatBox.innerHTML = `<form class="js-form">
       <div class="flex">
-        <select class="js-dices">
-          <option>Lanzar dados</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
+        <button class="js-dices button-wide">d6</button>
         ${_itemList()}
         ${_monsterList()}
         ${_roomList()}
@@ -435,12 +472,11 @@ export const dmApp = (response) => {
       e.preventDefault()
       let message = document.querySelector('.js-chat-dm .js-message').value
       message = message.split('\n').join('<br>')
-      console.log(message)
       saveMessage(pj, message)
       return false
     })
-    document.querySelector('.js-chat-dm .js-dices').addEventListener('change', function () {
-      let dice = this.value
+    document.querySelector('.js-chat-dm .js-dices').addEventListener('click', function () {
+      let dice = '1'
       let throws = []
       for (let a = 0; a < dice; a++) {
         let t = Math.ceil(Math.random() * 6)
@@ -452,14 +488,9 @@ export const dmApp = (response) => {
     document.querySelector('.js-chat-dm .js-item-select').addEventListener('change', function () {
       let item = _items[this.value]
       let print = ''
-      print += (item.def !== '') ? `<span>Defensa:</span> +${item.def}<br>` : ''
-      print += (item.dmg !== '') ? `<span>Daño:</span> ${item.dmg}<br>` : ''
-      print += (item.range !== '') ? `<span>Alcance:</span> ${item.range}<br>` : ''
-      print += (item.hands !== '')
-        ? (item.hands === '1')
-          ? '1 mano'
-          : '2 manos'
-        : ''
+      print += (item.bd !== '+0' && item.bd !== '') ? `<span>Bonus defensa:</span> ${item.bd}<br>` : ''
+      print += (item.ba !== '+0' && item.ba !== '') ? `<span>Bonus ataque:</span> ${item.ba}<br>` : ''
+      print += (item.notes !== '') ? `<span>Notas:</span> ${item.notes}<br>` : ''
       let message = `<img src="${item.icon}" width="36">
         <h3>${item.name}</h3>
         ${print}`
@@ -469,20 +500,18 @@ export const dmApp = (response) => {
       let monster = _data.monsters[this.value]
       let weapon = _items[monster.weapon]
       let print = ''
-      print += (monster.weapon !== '') ? `<img src="${weapon.icon}" width="16"> ${weapon.name}<br>` : ''
-      print += `<span class="dm-only">Daño: ${weapon.dmg}<br></span>`
-      print += (monster.atk !== '') ? `<span class="dm-only">Ataque: ${monster.atk}<br></span>` : ''
+      print += (monster.mele !== '0') ? `<span class="dm-only">Melé: ${monster.mele}<br></span>` : ''
+      print += (monster.dist !== '0') ? `<span class="dm-only">Distancia: ${monster.dist}<br></span>` : ''
       print += (monster.def !== '') ? `<span class="dm-only">Defensa: ${monster.def}<br></span>` : ''
-      print += (monster.hp !== '') ? `<span class="dm-only">PV: ${monster.hp}</span>` : ''
-      let message = `<img src="${monster.icon}" width="36">
-        <h3>${monster.name}</h3>
+      print += (monster.pv !== '') ? `<span class="dm-only">PV: ${monster.pv}</span>` : ''
+      let message = `Aparece:<h3>${monster.name}</h3>
         ${print}`
       saveMessage(pj, message)
     })
     document.querySelector('.js-form .js-room-select').addEventListener('change', function () {
-      let message = `<img src="${_data.campaigns.rooms[this.value].img}">`
-      message += `<div>${_data.campaigns.rooms[this.value].description}</div>`
-      message += `<div class="dm-only">${_data.campaigns.rooms[this.value].dm}</div>`
+      let message = `<img src="${_data.campaigns[_data.campaigns.active].rooms[this.value].img}">`
+      message += `<div>${_data.campaigns[_data.campaigns.active].rooms[this.value].description}</div>`
+      message += `<div class="dm-only">${_data.campaigns[_data.campaigns.active].rooms[this.value].dm}</div>`
       saveMessage(pj, message)
     })
     let deleteButton = document.querySelectorAll('.js-chat-delete')

@@ -93,16 +93,17 @@ export const skillsApp = (response) => {
   const _printSkills = () => {
     let skillsout = `<table>
                       </thead>
-                        <th>ID</th><th>Name</th><th>Activation</th><th>Cost</th><th>Type</th><th>Description</th><th></th>`
+                        <th>ID</th><th>Name</th><th>BM</th><th>Range</th><th>Pause</th><th>Description</th><th>Cost</th><th></th>`
     for (let _skill in _skills) {
       let skill = _skills[_skill]
       let print = '<tr>'
       print += `<td>${_skill}</td>`
       print += `<td data-skill="${_skill}" data-prop="name" contenteditable="true" class="js-edit-skill">${skill.name}</td>`
-      print += (skill.activation !== '') ? `<td data-skill="${_skill}" data-prop="activation" contenteditable="true" class="js-edit-skill">${skill.activation}</td>` : '<td></td>'
-      print += (skill.cost !== '') ? `<td data-skill="${_skill}" data-prop="cost" contenteditable="true" class="js-edit-skill">${skill.cost}</td>` : '<td></td>'
-      print += (skill.type !== '') ? `<td data-skill="${_skill}" data-prop="type" contenteditable="true" class="js-edit-skill">${skill.type}</td>` : '<td></td>'
-      print += (skill.description !== '') ? `<td data-skill="${_skill}" data-prop="description" contenteditable="true" class="js-edit-skill">${skill.description}</td>` : '<td></td>'
+      print += (skill.bm !== '') ? `<td data-skill="${_skill}" data-prop="bm" contenteditable="true" class="js-edit-skill">${skill.bm}</td>` : '<td></td>'
+      print += (skill.range !== '') ? `<td data-skill="${_skill}" data-prop="range" contenteditable="true" class="js-edit-skill">${skill.range}</td>` : '<td></td>'
+      print += (skill.pause !== '') ? `<td data-skill="${_skill}" data-prop="pause" contenteditable="true" class="js-edit-skill">${skill.pause}</td>` : '<td></td>'
+      print += (skill.desc !== '') ? `<td data-skill="${_skill}" data-prop="desc" contenteditable="true" class="js-edit-skill">${skill.desc}</td>` : '<td></td>'
+      print += (skill.cost !== '') ? `<td data-skill="${_skill}" data-prop="cost" contenteditable="true" class="js-edit-skill">${skill.cost}mo</td>` : '<td></td>'
       print += `<td><button class="js-skill-delete delete button button-outline" data-skill="${_skill}">Borrar</button></td>`
       print += `</tr>`
       skillsout += print

@@ -23,7 +23,9 @@ export const pjApp = (response) => {
       _items = _data.items
       _skills = _data.skills
 
-      console.log(_data)
+      document.querySelector('.bg').classList.remove('light', 'dark', 'dawn', 'forest', 'day', 'night', 'dungeon', 'treasure')
+      document.querySelector('.bg').classList.add(_data.campaigns[_data.campaigns.active].bg)
+
       if (_data.characters[pj].token === '') {
         _setToken(pj, Date.parse(Date()))
         _loadPJ(pj)
@@ -40,6 +42,12 @@ export const pjApp = (response) => {
         page.style.display = 'none'
       })
       document.querySelector('.js-page-pj').style.display = 'block'
+    })
+
+    document.querySelector('.js-dices').addEventListener('click', function () {
+      let t = Math.ceil(Math.random() * 6)
+      let message = '<img src="img/' + t + '.gif" width="32"> '
+      saveMessage(pj, message)
     })
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
@@ -65,6 +73,7 @@ export const pjApp = (response) => {
           <thead>
             <tr>
               <th>Fue</th>
+              <th>Des</th>
               <th>Men</th>
               <th>Def</th>
               <th>PV</th>
@@ -73,6 +82,7 @@ export const pjApp = (response) => {
           <tbody>
             <tr>
               <td>${_pj.force}</td>
+              <td>${_pj.dex}</td>
               <td>${_pj.mind}</td>
               <td>${_printDefense()}</td>
               <td>${_printPv()} / ${_pj.pv}</td>
@@ -80,14 +90,18 @@ export const pjApp = (response) => {
           </tbody>
         </table>
       </div>
-      <div class="skills box">
-        <h5>Habilidades</h5>
-        ${_printSkills()}
+      <div class="talent box">
+        <h5>Talento</h5>
+        ${_printTalent()}
       </div>
       <div class="items box">
         <h5>Equipamiento</h5>
-        <p><img src="img/mo.gif"><span class="js-mo editable" contenteditable="true">${_pj.mo}</span> mo.</p>
+        <p><img src="img/mo.gif"><span class="js-mo editable" contenteditable="true">${_pj.mo}</span></p>
         ${_printItems('pj')}
+      </div>
+      <div class="skills box">
+        <h5>Hechizos</h5>
+        ${_printSkills()}
       </div>
       `
 
@@ -129,6 +143,7 @@ export const pjApp = (response) => {
               <thead>
                 <tr>
                   <th>Fue</th>
+                  <th>Des</th>
                   <th>Men</th>
                   <th>Def</th>
                   <th>PV</th>
@@ -137,6 +152,7 @@ export const pjApp = (response) => {
               <tbody>
                 <tr>
                   <td>${_pj.force}</td>
+                  <td>${_pj.dex}</td>
                   <td>${_pj.mind}</td>
                   <td>${_printDefense()}</td>
                   <td>${_printPv()} / ${_pj.pv}</td>
@@ -144,14 +160,14 @@ export const pjApp = (response) => {
               </tbody>
             </table>
           </div>
-          <div class="skills box">
-            <h5>Habilidades</h5>
-            ${_printSkills()}
-          </div>
           <div class="items box">
             <h5>Equipamiento</h5>
-            <p><img src="img/mo.gif"> ${_pj.mo} mo.</p>
+            <p><img src="img/mo.gif"> ${_pj.mo}</p>
             ${_printItems()}
+          </div>
+          <div class="skills box">
+            <h5>Hechizos</h5>
+            ${_printSkills()}
           </div>`
         _container.append(_template)
       }
@@ -186,7 +202,7 @@ export const pjApp = (response) => {
   const _setMo = (pj, mo) => {
     let database = firebase.database()
     database.ref().child('/characters/' + pj).update({ 'mo': mo })
-    let message = `Ahora tengo ${mo}mo.`
+    let message = `Ahora tengo ${mo}.`
     saveMessage(pj, message)
   }
 
@@ -197,7 +213,7 @@ export const pjApp = (response) => {
 
   const _printDefense = () => {
     let items = _pj.items.split(',')
-    let defOut = 1
+    let defOut = _pj.force * 1
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
@@ -215,6 +231,17 @@ export const pjApp = (response) => {
     return (parseFloat(_pj.pv) - parseFloat(_pj.dmg)) / parseFloat(_pj.pv) * 100
   }
 
+  const _printTalent = () => {
+    let talent = _data.talents[_pj.talent]
+    let print = (talent)
+      ? `<div class="js-info">
+        <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
+        <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}</label>
+        <div class="js-info-text">${talent.desc}</div>
+      </div>`
+      : ''
+    return print
+  }
   const _printSkills = () => {
     let skills = _pj.skills.split(',')
     let skillsout = ''
@@ -223,9 +250,10 @@ export const pjApp = (response) => {
         let skill = _skills[skills[i].trim()]
         if (typeof skill !== 'undefined') {
           let print = ''
-          print += (skill.activation !== '') ? `<strong>Activación:</strong>${skill.activation}<br>` : ''
-          print += (skill.cost !== '') ? `<strong>Coste:</strong>${skill.cost}<br>` : ''
-          print += (skill.description !== '') ? `<strong>Descripción:</strong><br>${skill.description}<br>` : ''
+          print += (skill.bm !== '+0') ? `<strong>Bonus:</strong>${skill.bm}<br>` : ''
+          print += (skill.range !== '') ? `<strong>Rango:</strong>${skill.range}<br>` : ''
+          print += (skill.pause !== '') ? `<strong>Pausa:</strong>${skill.pause}<br>` : ''
+          print += (skill.desc !== '') ? `<strong>Descripción:</strong><br>${skill.desc}<br>` : ''
 
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
@@ -246,14 +274,9 @@ export const pjApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.def !== '') ? `<strong>Defensa:</strong> +${item.def}<br>` : ''
-          print += (item.dmg !== '') ? `<strong>Daño:</strong> ${item.dmg}<br>` : ''
-          print += (item.range !== '') ? `<strong>Alcance:</strong> ${item.range}<br>` : ''
-          print += (item.hands !== '')
-            ? (item.hands === '1')
-              ? '1 mano'
-              : '2 manos'
-            : ''
+          print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
+          print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
+          print += (item.notes !== '') ? `<strong>Notes:</strong><br> ${item.notes}<br>` : ''
           itemsout += `<div class="js-info">
             <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
             <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
@@ -270,7 +293,6 @@ export const pjApp = (response) => {
   }
 
   const _chatDraw = (pj) => {
-    console.log(pj)
     let chat = _data.chat
     let container = document.querySelector('.js-messages')
     container.innerHTML = ''
@@ -290,20 +312,10 @@ export const pjApp = (response) => {
       let message = document.querySelector('.js-message')
       saveMessage(pj, message.value)
     })
-    document.querySelector('.js-dices').addEventListener('change', function () {
-      let dice = document.querySelector('.js-dices').value
-      let throws = []
-      for (let a = 0; a < dice; a++) {
-        let t = Math.ceil(Math.random() * 6)
-        throws.push(' <img src="img/' + t + '.gif" width="32"> ')
-      }
-      console.log(throws)
-      let message = throws.sort().reverse()
-      saveMessage(pj, message.join(''))
-    })
   }
 
   const saveMessage = (pj, m) => {
+    console.log(pj, m)
     let database = firebase.database()
     database.ref('chat/message' + Date.parse(Date())).set({
       'player': pj,

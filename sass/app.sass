@@ -4,7 +4,7 @@
 
 .flex
   display: flex
-  align-items: flex-end
+  align-items: flex-start
 
 .editable
   border-bottom: 1px solid #999
@@ -83,7 +83,7 @@
       font-size: 1rem
       margin-top: 1em
 
-    .table, .items, .skills
+    .table, .items, .skills, .talent
       display: none
 
   .big
@@ -97,7 +97,7 @@
     align-self: flex-start
     font-weight: 400
 
-    .table, .items, .skills
+    .table, .items, .skills, .talent
       display: block
 
     .more button
@@ -154,7 +154,7 @@
     margin-bottom: 0
     box-shadow: none
     border-radius: 0
-    background: #eee
+    background: rgba(240,240,240,.9)
 
     .class, .race, .name button
       display: none
@@ -166,15 +166,17 @@
   article
     display: flex
     align-items: stretch
+  
+  &.items, &.skills, &.monsters, &.rooms
+    background: #fff
 
 .chat 
-  background: #eee
   width: 50%
   height: 90vh
   padding: 1em
   border: 1px solid #cccccc
   padding: 1em
-  background: #fff
+  background: rgba(255,255,255,.8)
   z-index: 10
   overflow: auto
 
@@ -188,16 +190,13 @@
     height: 10em
   
   .messages
-
     p
       background: #000
       color: #fff
-      padding: 0 0.5em 0.5em
+      padding: 0.5em
       max-width: 80%
       float: left
       clear: both
-      border-top: .5em solid #000000
-      border-left: .5em solid #fff
 
       img
         vertical-align: middle
@@ -207,8 +206,6 @@
     
     p.own
       float: right
-      border-right: .5em solid #fff
-      border-left: 0
 
 
     .dm 
@@ -302,7 +299,7 @@
       padding: 0.5em
 
 .list
-  background: #eee
+  background: rgba(240,240,240,.5)
   width: 25%
   height: 90vh
   overflow: auto
@@ -461,10 +458,8 @@
       cursor: pointer
       
   .list
-    .disabled
-      background: #ccc
-      border: 0
     & > div 
+      border-left: 1em solid #090
       min-height: 4em
       .delete
         background: #c00
@@ -475,6 +470,8 @@
         width: 1.4em
         height: 1.4em
         text-align: center
+    .disabled
+      border-left-color: #c00
     .img 
       width: 48px
       height: 48px
@@ -525,5 +522,44 @@ nav
   button
     float: left
 
+  select
+    width: auto
+
 td
   vertical-align: top
+
+.bg
+  transition: background 1s ease
+  background-position: center center
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  z-index: -1
+  filter: blur(.5em)
+  transform: scale(1.1)
+
+  &.dark
+    background: #333
+  &.light
+    background: #eee
+  &.night
+    background: url(http://www.textures4photoshop.com/tex/thumbs/halloween-night-background-free-thumb31.jpg)
+    background-size: cover
+  &.dawn
+    background: url(https://marketplace.canva.com/MACzR4QlRrQ/1/screen/canva-dawn%2C-sz%C3%A1rsomly%C3%B3%2C-red%2C-sunrise%2C-cloud%2C-sky-MACzR4QlRrQ.jpg)
+    transition: scale(-1-1, 1.1)
+    background-size: cover
+  &.forest
+    background: url(https://media.npr.org/assets/img/2017/07/28/bialowiezaforest-3-2fd1295cafc34f4f097c8c47002faf9bbc93dc49-s800-c85.jpg)
+    background-size: cover
+  &.day
+    background: url(https://c.tadst.com/gfx/sunrise.png)
+    background-size: cover
+  &.dungeon
+    background: url(https://vignette.wikia.nocookie.net/dungeonkeeper/images/f/f9/SecretDoor.png/revision/latest?cb=20131103151508)
+    background-size: cover
+  &.treasure
+    background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoZk7g5qc0j2nPEpqoIHPvDLB778cqrVpXjaZ9J7uobT2QMOmd5w)
+    background-size: cover

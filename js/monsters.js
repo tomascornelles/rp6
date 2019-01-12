@@ -93,18 +93,20 @@ export const monstersApp = (response) => {
   const _printMonsters = () => {
     let monstersout = `<table>
                       </thead>
-                        <th></th><th>ID</th><th>Name</th><th>Atk</th><th>Def</th><th>HP</th><th>Weapon</th><th>Type</th><th></th>`
+                        <th>ID</th><th>Name</th><th>F</th><th>D</th><th>M</th><th>Melé</th><th>Dist</th><th>Def</th><th>HP</th><th>Weapon</th><th>Type</th><th></th>`
     for (let _monster in _monsters) {
       let monster = _monsters[_monster]
       let print = '<tr>'
-      print += `<td><img src="${monster.icon}" height="20" class="js-edit-image"><span data-monster="${_monster}" data-prop="icon" contenteditable="true" class="js-edit-monster hidden">${monster.icon}</span></td>`
       print += `<td>${_monster}</td>`
       print += `<td data-monster="${_monster}" data-prop="name" contenteditable="true" class="js-edit-monster">${monster.name}</td>`
-      print += (monster.atk !== '') ? `<td data-monster="${_monster}" data-prop="atk" contenteditable="true" class="js-edit-monster">${monster.atk}</td>` : '<td></td>'
+      print += (monster.f !== '') ? `<td data-monster="${_monster}" data-prop="f" contenteditable="true" class="js-edit-monster">${monster.f}</td>` : '<td></td>'
+      print += (monster.d !== '') ? `<td data-monster="${_monster}" data-prop="d" contenteditable="true" class="js-edit-monster">${monster.d}</td>` : '<td></td>'
+      print += (monster.m !== '') ? `<td data-monster="${_monster}" data-prop="m" contenteditable="true" class="js-edit-monster">${monster.m}</td>` : '<td></td>'
+      print += (monster.mele !== '') ? `<td data-monster="${_monster}" data-prop="mele" contenteditable="true" class="js-edit-monster" style="background: #eee">${monster.mele}</td>` : '<td></td>'
+      print += (monster.dist !== '') ? `<td data-monster="${_monster}" data-prop="dist" contenteditable="true" class="js-edit-monster" style="background: #eee">${monster.dist}</td>` : '<td></td>'
       print += (monster.def !== '') ? `<td data-monster="${_monster}" data-prop="def" contenteditable="true" class="js-edit-monster">${monster.def}</td>` : '<td></td>'
-      print += (monster.hp !== '') ? `<td data-monster="${_monster}" data-prop="hp" contenteditable="true" class="js-edit-monster">${monster.hp}</td>` : '<td></td>'
-      print += (monster.weapon !== '') ? `<td data-monster="${_monster}" data-prop="weapon" contenteditable="true" class="js-edit-monster">${monster.weapon}</td>` : '<td></td>'
-      print += (monster.type !== '') ? `<td data-monster="${_monster}" data-prop="type" contenteditable="true" class="js-edit-monster">${monster.type}</td>` : '<td></td>'
+      print += (monster.pv !== '') ? `<td data-monster="${_monster}" data-prop="pv" contenteditable="true" class="js-edit-monster">${monster.pv}</td>` : '<td></td>'
+      print += (monster.notes !== '') ? `<td data-monster="${_monster}" data-prop="notes" contenteditable="true" class="js-edit-monster">${monster.notes}</td>` : '<td></td>'
       print += `<td><button class="js-monster-delete delete button button-outline" data-item="${_monster}">Borrar</button></td>`
       print += `</tr>`
       monstersout += print
@@ -117,11 +119,13 @@ export const monstersApp = (response) => {
     let form = `<form action="" class="js-monster-form">
     <input type="text" placeholder="Name" data-prop="name" name="name">
     <input type="text" placeholder="Image" data-prop="icon" name="icon">
-    <input type="text" placeholder="Atk" data-prop="atk" name="atk">
+    <input type="text" placeholder="F" data-prop="f" name="f">
+    <input type="text" placeholder="D" data-prop="d" name="d">
+    <input type="text" placeholder="M" data-prop="m" name="m">
+    <input type="text" placeholder="Melé" data-prop="mele" name="mele">
+    <input type="text" placeholder="Dist" data-prop="dist" name="dist">
     <input type="text" placeholder="Def" data-prop="def" name="def">
-    <input type="text" placeholder="HP" data-prop="hp" name="hp">
-    <input type="text" placeholder="Weapon" data-prop="weapon" name="weapon">
-    <input type="text" placeholder="Type" data-prop="type" name="type">
+    <input type="text" placeholder="PV" data-prop="pv" name="pv">
     <input type="submit" value="Save" class="js-monster-save">
     </form>`
 
