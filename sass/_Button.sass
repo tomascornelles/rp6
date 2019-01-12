@@ -41,14 +41,15 @@ input[type='submit']
 			border-color: $color-primary
 
 	&.button-outline
-		background-color: transparent
+		background-color: #fff
 		color: $color-primary
 
 		&:focus,
 		&:hover
-			background-color: transparent
+			// background-color: transparent
 			border-color: $color-secondary
 			color: $color-secondary
+			opacity: .8
 
 		&[disabled]
 
@@ -73,3 +74,7 @@ input[type='submit']
 			&:focus,
 			&:hover
 				color: $color-primary
+	
+	&.button-wide
+		display: block
+		width: 100%

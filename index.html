@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="sass/app.sass">
 </head>
 <body>
-
+  <div class="bg"></div>
   <div class="pages">
     <section class="page home js-page-home hidden">
       <div class="grid js-grid"></div>
@@ -22,20 +22,8 @@
         <div class="list js-list"></div>
         <div class="chat js-chat">
           <form class="js-form">
-            <select class="js-dices">
-              <option>Lanzar dados</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-            </select>
             <div class="flex">
+              <span class="button js-dices">d6</span>
               <input type="text" class="js-message" placeholder="Escribe un mensaje">
               <input type="submit" value="Enviar" class="js-send">
             </div>
@@ -48,6 +36,16 @@
 
     <section class="page dm js-page-dm hidden">
       <nav>
+        <select class="js-ambient">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="day">Day</option>
+          <option value="night">Night</option>
+          <option value="dawn">Dawn</option>
+          <option value="forest">Forest</option>
+          <option value="dungeon">Dungeon</option>
+          <option value="treasure">Treasure</option>
+        </select>
         <a href="/library/items" class="button button-outline">Equipamiento</a>
         <a href="/library/skills" class="button button-outline">Habilidades</a>
         <a href="/library/monsters" class="button button-outline">Criaturas</a>
@@ -107,7 +105,6 @@
         <span class="js-campaign-date js-edit-campaign" data-campaign="" data-prop="date" contenteditable="true"></span><br>
         <strong class="js-campaign-author js-edit-campaign" data-campaign="" data-prop="author" contenteditable="true"></strong>
         <hr>
-      </div>
       </div>
       <div class="new-room js-rooms-new"></div>
       <div class="js-rooms-list"></div>
