@@ -85,7 +85,7 @@ export const pjApp = (response) => {
               <td>${_pj.dex}</td>
               <td>${_pj.mind}</td>
               <td>${_printDefense()}</td>
-              <td>${_printPv()} / ${_pj.pv}</td>
+              <td>${_printPv()} / ${_getPV(_pj.force)}</td>
             </tr>
           </tbody>
         </table>
@@ -155,17 +155,17 @@ export const pjApp = (response) => {
                   <td>${_pj.dex}</td>
                   <td>${_pj.mind}</td>
                   <td>${_printDefense()}</td>
-                  <td>${_printPv()} / ${_pj.pv}</td>
+                  <td>${_printPv()} / ${_getPV(_pj.force)}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="items box">
+          <div class="items">
             <h5>Equipamiento</h5>
             <p><img src="img/mo.gif"> ${_pj.mo}</p>
             ${_printItems()}
           </div>
-          <div class="skills box">
+          <div class="skills">
             <h5>Hechizos</h5>
             ${_printSkills()}
           </div>`
@@ -213,22 +213,26 @@ export const pjApp = (response) => {
 
   const _printDefense = () => {
     let items = _pj.items.split(',')
-    let defOut = _pj.force * 1
+    let defOut = _pj.dex * 1
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (item.def) defOut += parseFloat(item.def)
+        if (item.bd) defOut += parseFloat(item.bd)
       }
     }
     return defOut
   }
 
   const _printPv = () => {
-    return parseFloat(_pj.pv) - parseFloat(_pj.dmg)
+    return parseFloat(_getPV(_pj.force)) - parseFloat(_pj.dmg)
   }
 
   const _barPv = () => {
-    return (parseFloat(_pj.pv) - parseFloat(_pj.dmg)) / parseFloat(_pj.pv) * 100
+    return (parseFloat(_getPV(_pj.force) - parseFloat(_pj.dmg)) / parseFloat(_getPV(_pj.force))) * 100
+  }
+
+  const _getPV = (f) => {
+    return (10 + 10 * f)
   }
 
   const _printTalent = () => {
@@ -298,10 +302,10 @@ export const pjApp = (response) => {
     container.innerHTML = ''
     for (const id in chat) {
       let p = document.createElement('p')
-      if (chat[id].player === 'dm') { p.classList.add('dm') } else if (chat[id].player === pj) { p.classList.add('own') }
-      if (chat[id].player === pj) p.classList.add('own')
+      if (chat[id].player === 'dm') { p.classList.add('dm') } else if (chat[id].player === pj.toLowerCase()) { p.classList.add('own') }
+      // if (chat[id].player === pj) p.classList.add('own')
       let response = chat[id].text
-      let responsePrint = (response.match(/^(http).*(png|gif|jpg)$/gm))
+      let responsePrint = (response.match(/^(http).*(png|gif|jpg|jpeg)$/gm))
         ? '<a href="' + response + '" target="_blank"><img src="' + response + '"></a>'
         : '<strong>' + chat[id].player + ': </strong>' + response
       p.innerHTML = responsePrint
