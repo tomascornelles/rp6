@@ -78,12 +78,12 @@ export const dmApp = (response) => {
       <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
       <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
         <div class="name">
-          <h4><strong>${_pj.name}</strong> <em>(${_pj.class} / ${_pj.race})</em><br>
-            <code>[ <span class="js-edit-attr" data-pj="${pj}" data-attr="force" contenteditable="true">${_pj.force}</span> | 
-            <span class="js-edit-attr" data-pj="${pj}" data-attr="dex" contenteditable="true">${_pj.dex}</span> | 
-            <span class="js-edit-attr" data-pj="${pj}" data-attr="mind" contenteditable="true">${_pj.mind}</span> ]
+          <h4><strong>${_pj.name}</strong> <small>(${_pj.class} / ${_pj.race})</small><br>
+            <code>[ <span class="js-edit-attr editable" data-pj="${pj}" data-attr="force" contenteditable="true" title="Físico">${_pj.force}</span> | 
+            <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dex" contenteditable="true" title="Destreza">${_pj.dex}</span> | 
+            <span class="js-edit-attr editable" data-pj="${pj}" data-attr="mind" contenteditable="true" title="Mente">${_pj.mind}</span> ]
             Def: ${_printDefense()} | 
-            Pv: <span class="js-edit-attr" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / ${_getPV(_pj.force)}</code>
+            Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / ${_getPV(_pj.force)}</code>
           </h4>
         </div>
         <div class="talent box">
