@@ -160,12 +160,16 @@ export const pjApp = (response) => {
               </tbody>
             </table>
           </div>
-          <div class="items">
+          <div class="talent box">
+            <h5>Talento</h5>
+            ${_printTalent()}
+          </div>
+          <div class="items box">
             <h5>Equipamiento</h5>
             <p><img src="img/mo.gif"> ${_pj.mo}</p>
             ${_printItems()}
           </div>
-          <div class="skills">
+          <div class="skills box">
             <h5>Hechizos</h5>
             ${_printSkills()}
           </div>`
@@ -240,8 +244,8 @@ export const pjApp = (response) => {
     let print = (talent)
       ? `<div class="js-info">
         <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
-        <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}</label>
-        <div class="js-info-text">${talent.desc}</div>
+        <label class="js-info-link-" for="${_pj.name}-talent-${talent}">${talent.name}</label>
+        <div class="js-info-text-">${talent.desc}</div>
       </div>`
       : ''
     return print
@@ -261,8 +265,8 @@ export const pjApp = (response) => {
 
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
-            <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
-            <div class="js-info-text">${print}</div>
+            <label class="js-info-link-" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
+            <div class="js-info-text-">${print}</div>
           </div>`
         }
       }
@@ -283,8 +287,8 @@ export const pjApp = (response) => {
           print += (item.notes !== '') ? `<strong>Notes:</strong><br> ${item.notes}<br>` : ''
           itemsout += `<div class="js-info">
             <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
-            <div class="js-info-text">${print}</div>
+            <label class="js-info-link-" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
+            <div class="js-info-text-">${print}</div>
           </div>`
         }
       }

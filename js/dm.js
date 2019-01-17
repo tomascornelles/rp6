@@ -98,7 +98,7 @@ export const dmApp = (response) => {
         </div>
         <div class="items box">
           <h5>Equipamiento</h5>
-          <p><span class="js-edit-attr" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span></p>
+          <p><img src="img/mo.gif"><span class="js-edit-attr editable" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span></p>
           ${_printItems(pj)}
           <div class="js-item-list">${_itemList(pj)}</div>
         </div>
@@ -250,7 +250,7 @@ export const dmApp = (response) => {
       ? `<div class="js-info">
         <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
         <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}</label>
-        <div class="js-info-text">${talent.desc}</div>
+        <div class="js-info-text-">${talent.desc}</div>
       </div>`
       : ''
     return print
@@ -289,7 +289,7 @@ export const dmApp = (response) => {
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
             <label class="js-info-link" for="${_pj.name}-skill-${skills[i]}">${skill.name}<a class="js-skill-remove delete button-outline" data-pj="${pj}" data-skill="${skills[i]}">×</a></label>
-            <div class="js-info-text">${print}</div>
+            <div class="js-info-text-">${print}</div>
           </div>`
         }
       }
@@ -347,7 +347,7 @@ export const dmApp = (response) => {
           itemsout += `<div class="js-info">
             <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
             <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove delete button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
-            <div class="js-info-text">${print}</div>
+            <div class="js-info-text-">${print}</div>
           </div>`
         }
       }

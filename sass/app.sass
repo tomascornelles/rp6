@@ -168,7 +168,8 @@
     align-items: stretch
   
   &.items, &.skills, &.monsters, &.rooms
-    background: #fff
+    background: rgba(255,255,255,.9)
+    padding: 1em
 
 .chat 
   width: 50%
@@ -491,6 +492,10 @@
     .img 
       width: 48px
       height: 48px
+    .box label:after
+      display: none
+    .delete
+      float: right
   .barra 
     height: 5px
     background: #c00
@@ -533,13 +538,22 @@
   color: #c00
 
 nav
-  text-align: right
+  text-align: center
+  overflow: hidden
   
   button
     float: left
-
+  .button
+    float: right
+  .inicio
+    float: left
   select
-    width: auto
+    float: left
+    width: 20em
+  .logo
+    max-height: 3em
+    padding: 0.5em
+    opacity: .7
 
 td
   vertical-align: top
@@ -561,7 +575,7 @@ td
   &.light
     background: #eee
   &.night
-    background: url(https://visit-sedona.s3.amazonaws.com/CMS/6118/milky_way__wysiwyg.jpg)
+    background: url(https://cdn.dribbble.com/users/2273170/screenshots/4645083/2nd_shot_.jpg)
     background-size: cover
   &.dawn
     background: url(https://marketplace.canva.com/MACzR4QlRrQ/1/screen/canva-dawn%2C-sz%C3%A1rsomly%C3%B3%2C-red%2C-sunrise%2C-cloud%2C-sky-MACzR4QlRrQ.jpg)
