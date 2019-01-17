@@ -114,6 +114,9 @@ export const pjApp = (response) => {
     document.querySelector('.js-extraItems').addEventListener('blur', function () {
       _setExtra(pj, this.innerHTML)
     })
+    document.querySelector('.js-talentLvl').addEventListener('blur', function () {
+      _setTalentLvl(pj, this.innerHTML)
+    })
   }
 
   const _listPJs = () => {
@@ -215,6 +218,11 @@ export const pjApp = (response) => {
     database.ref().child('/characters/' + pj).update({ 'extra': extra })
   }
 
+  const _setTalentLvl = (pj, lvl) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'talentLvl': lvl })
+  }
+
   const _printDefense = () => {
     let items = _pj.items.split(',')
     let defOut = _pj.dex * 1
@@ -244,7 +252,7 @@ export const pjApp = (response) => {
     let print = (talent)
       ? `<div class="js-info">
         <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
-        <label class="js-info-link-" for="${_pj.name}-talent-${talent}">${talent.name}</label>
+        <label class="js-info-link-" for="${_pj.name}-talent-${talent}">${talent.name}, nivel: <span class="js-talentLvl editable" contenteditable="true">${_pj.talentLvl}</span></label>
         <div class="js-info-text-">${talent.desc}</div>
       </div>`
       : ''

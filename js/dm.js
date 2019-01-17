@@ -205,6 +205,8 @@ export const dmApp = (response) => {
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
     } else if (attr === 'extra') {
       database.ref().child('/characters/' + pj).update({ 'extra': val })
+    } else if (attr === 'talentLvl') {
+      database.ref().child('/characters/' + pj).update({ 'talentLvl': val })
     }
     saveMessage('dm', message)
   }
@@ -249,8 +251,8 @@ export const dmApp = (response) => {
     let print = (talent)
       ? `<div class="js-info">
         <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
-        <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}</label>
-        <div class="js-info-text-">${talent.desc}</div>
+        <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}, nivel: <span class="js-edit-attr editable" contenteditable="true">${_pj.talentLvl}</span></label>
+        <div class="js-info-text">${talent.desc}</div>
       </div>`
       : ''
     return print
