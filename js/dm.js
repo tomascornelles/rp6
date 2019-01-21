@@ -528,7 +528,10 @@ export const dmApp = (response) => {
       if ((e.ctrlKey || e.metaKey) && e.which == 226) {
         let res = window.prompt('Comando')
         res = res.split(' ')
-        _setAttr(res[0], res[1], res[2])
+        let pj = res[0]
+        let attr = res[1]
+        let value = (res[2].indexOf('+')) ? data.characters[pj][attr] + res[2] : res[2]
+        _setAttr(pj, attr, value)
       }
     })
   }
