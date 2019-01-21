@@ -228,11 +228,11 @@ export const dmApp = (response) => {
 
   const _printDefense = () => {
     let items = _pj.items.split(',')
-    let defOut = 1
+    let defOut = _pj.dex * 1
     if (items[0] !== '') {
       for (let i = 0; i < items.length; i++) {
         let item = _items[items[i].trim()]
-        if (item.bd !== '') defOut += parseFloat(item.bd)
+        if (item.bd) defOut += parseFloat(item.bd)
       }
     }
     return defOut
