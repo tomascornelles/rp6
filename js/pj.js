@@ -117,16 +117,16 @@ export const pjApp = (response) => {
     document.querySelector('.js-talentLvl').addEventListener('blur', function () {
       _setTalentLvl(pj, this.innerHTML)
     })
-    document.querySelector('.js-use').addEventListener('click', function () {
-      let t = Math.ceil(Math.random() * 6)
-      let message = '<img src="img/' + t + '.gif" width="32"> '
-      _pj = _data.characters[pj]
-      message += `<br>Bonus Fuerza: +${_pj.force}`
-      message += `<br>Bonus Arma: +${this.dataset.ba}`
-      message += '<br><small>¿Algún bonus más?</small>'
-      message += `<h3>Total: ${t*1 + _pj.force*1 + this.dataset.ba*1}</h3>`
-      saveMessage(pj, message)
-    })
+    // document.querySelector('.js-use').addEventListener('click', function () {
+    //   let t = Math.ceil(Math.random() * 6)
+    //   let message = '<img src="img/' + t + '.gif" width="32"> '
+    //   _pj = _data.characters[pj]
+    //   message += `<br>Bonus Fuerza: +${_pj.force}`
+    //   message += `<br>Bonus Arma: +${this.dataset.ba}`
+    //   message += '<br><small>¿Algún bonus más?</small>'
+    //   message += `<h3>Total: ${t*1 + _pj.force*1 + this.dataset.ba*1}</h3>`
+    //   saveMessage(pj, message)
+    // })
   }
 
   const _listPJs = () => {
@@ -302,7 +302,7 @@ export const pjApp = (response) => {
           let print = ''
           print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
           print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
-          print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
+          // print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
           // print += (item.notes !== '') ? `<strong>Notes:</strong><br> ${item.notes}<br>` : ''
           itemsout += `<div class="js-info">
             <label><img src="${item.icon}" height="20"> ${item.name}</label>

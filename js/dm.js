@@ -210,8 +210,16 @@ export const dmApp = (response) => {
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
     } else if (attr === 'extra') {
       database.ref().child('/characters/' + pj).update({ 'extra': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val}.`
     } else if (attr === 'talentLvl') {
       database.ref().child('/characters/' + pj).update({ 'talentLvl': val })
+      message = `${_data.characters[pj].name} ahora tiene rango ${val} de ${_data.characters[pj].talent}.`
+    } else if (attr === 'items') {
+      database.ref().child('/characters/' + pj).update({ 'items': val })
+      message = `${_data.characters[pj].name} ha actualizado su equipamiento.`
+    } else if (attr === 'skills') {
+      database.ref().child('/characters/' + pj).update({ 'skills': val })
+      message = `${_data.characters[pj].name} ha actualizado su magia.`
     }
     saveMessage('dm', message)
   }
@@ -525,12 +533,18 @@ export const dmApp = (response) => {
   const _openConsole = () => {
     window.addEventListener('keydown', function (e) {
       e = e || window.event
-      if ((e.ctrlKey || e.metaKey) && e.which == 226) {
+      if (e.which == 192) {
         let res = window.prompt('Comando')
         res = res.split(' ')
         let pj = res[0]
         let attr = res[1]
-        let value = (res[2].indexOf('+')) ? data.characters[pj][attr] + res[2] : res[2]
+        let value = (res[2].indexOf('+') >= 0) 
+          ? _data.characters[pj][attr]*1 + parseInt(res[2]) 
+          : (res[2].indexOf('-') >= 0)
+            ? _data.characters[pj][attr]*1 + parseInt(res[2]) 
+            : (res[2] === 'add')
+              ? _data.characters[pj][attr] + ', ' + res[3]
+              : res[2]
         _setAttr(pj, attr, value)
       }
     })
