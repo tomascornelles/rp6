@@ -296,9 +296,10 @@ export const dmApp = (response) => {
         let skill = _skills[skills[i].trim()]
         if (typeof skill !== 'undefined') {
           let print = ''
-          print += (skill.bm !== '+0') ? `<strong>Bonus:</strong>${skill.bm}<br>` : ''
-          print += (skill.range !== '') ? `<strong>Rango:</strong>${skill.range}<br>` : ''
-          print += (skill.pause !== '') ? `<strong>Pausa:</strong>${skill.pause}<br>` : ''
+          print += (skill.bm !== '+0') ? `<strong>Bonus: </strong>+${skill.bm}<br>` : ''
+          print += (skill.vs !== '') ? `<strong>Objetivo: </strong>${skill.vs}<br>` : ''
+          print += (skill.range !== '') ? `<strong>Rango: </strong>${skill.range}<br>` : ''
+          print += (skill.pause !== '') ? `<strong>Pausa: </strong>${skill.pause}<br>` : ''
           print += (skill.desc !== '') ? `<strong>Descripción:</strong><br>${skill.desc}<br>` : ''
 
           skillsout += `<div class="js-info">
@@ -356,13 +357,10 @@ export const dmApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
-          print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
-          print += (item.notes !== '') ? `<strong>Notas:</strong> ${item.notes}<br>` : ''
+          print += (item.bd !== '') ? `( ${item.bd} )` : ''
+          print += (item.ba !== '') ? `( ${item.ba} )` : ''
           itemsout += `<div class="js-info">
-            <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove delete button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
-            <div class="js-info-text-">${print}</div>
+            <label><img src="${item.icon}" height="20"> ${item.name} ${print}</label>
           </div>`
         }
       }

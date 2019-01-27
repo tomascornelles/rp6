@@ -276,9 +276,10 @@ export const pjApp = (response) => {
         let skill = _skills[skills[i].trim()]
         if (typeof skill !== 'undefined') {
           let print = ''
-          print += (skill.bm !== '+0') ? `<strong>Bonus:</strong>${skill.bm}<br>` : ''
-          print += (skill.range !== '') ? `<strong>Rango:</strong>${skill.range}<br>` : ''
-          print += (skill.pause !== '') ? `<strong>Pausa:</strong>${skill.pause}<br>` : ''
+          print += (skill.bm !== '+0') ? `<strong>Bonus: </strong>+${skill.bm}<br>` : ''
+          print += (skill.vs !== '') ? `<strong>Objetivo: </strong>${skill.vs}<br>` : ''
+          print += (skill.range !== '') ? `<strong>Rango: </strong>${skill.range}<br>` : ''
+          print += (skill.pause !== '') ? `<strong>Pausa: </strong>${skill.pause}<br>` : ''
           print += (skill.desc !== '') ? `<strong>Descripción:</strong><br>${skill.desc}<br>` : ''
 
           skillsout += `<div class="js-info">
@@ -300,13 +301,12 @@ export const pjApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
-          print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
+          print += (item.bd !== '') ? `( ${item.bd} )` : ''
+          print += (item.ba !== '') ? `( ${item.ba} )` : ''
           // print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
           // print += (item.notes !== '') ? `<strong>Notes:</strong><br> ${item.notes}<br>` : ''
           itemsout += `<div class="js-info">
-            <label><img src="${item.icon}" height="20"> ${item.name}</label>
-            <div>${print}</div>
+            <label><img src="${item.icon}" height="20"> ${item.name} ${print}</label>
           </div>`
         }
       }
