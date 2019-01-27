@@ -117,6 +117,16 @@ export const pjApp = (response) => {
     document.querySelector('.js-talentLvl').addEventListener('blur', function () {
       _setTalentLvl(pj, this.innerHTML)
     })
+    // document.querySelector('.js-use').addEventListener('click', function () {
+    //   let t = Math.ceil(Math.random() * 6)
+    //   let message = '<img src="img/' + t + '.gif" width="32"> '
+    //   _pj = _data.characters[pj]
+    //   message += `<br>Bonus Fuerza: +${_pj.force}`
+    //   message += `<br>Bonus Arma: +${this.dataset.ba}`
+    //   message += '<br><small>¿Algún bonus más?</small>'
+    //   message += `<h3>Total: ${t*1 + _pj.force*1 + this.dataset.ba*1}</h3>`
+    //   saveMessage(pj, message)
+    // })
   }
 
   const _listPJs = () => {
@@ -126,7 +136,9 @@ export const pjApp = (response) => {
 
     for (let pj in pjs) {
       _pj = _data.characters[pj]
-      if (_pj.visible) {
+      let _pjs = _data.campaigns[_data.campaigns.active].pjs
+      let _pnjs = _data.campaigns[_data.campaigns.active].pnjs
+      if (_pj.visible && (_pjs.indexOf(pj) >= 0 || _pnjs.indexOf(pj) >= 0)) {
         let _template = document.createElement('div')
         _template.classList.add('js-template')
         _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
@@ -252,8 +264,8 @@ export const pjApp = (response) => {
     let print = (talent)
       ? `<div class="js-info">
         <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
-        <label class="js-info-link-" for="${_pj.name}-talent-${talent}">${talent.name}, nivel: <span class="js-talentLvl editable" contenteditable="true">${_pj.talentLvl}</span></label>
-        <div class="js-info-text-">${talent.desc}</div>
+        <label class="js-info-link-" for="${_pj.name}-talent-${talent}">${talent.name}, rango: <span class="js-talentLvl editable" contenteditable="true">${_pj.talentLvl}</span></label>
+        <div>${talent.desc}</div>
       </div>`
       : ''
     return print
@@ -266,15 +278,16 @@ export const pjApp = (response) => {
         let skill = _skills[skills[i].trim()]
         if (typeof skill !== 'undefined') {
           let print = ''
-          print += (skill.bm !== '+0') ? `<strong>Bonus:</strong>${skill.bm}<br>` : ''
-          print += (skill.range !== '') ? `<strong>Rango:</strong>${skill.range}<br>` : ''
-          print += (skill.pause !== '') ? `<strong>Pausa:</strong>${skill.pause}<br>` : ''
+          print += (skill.bm !== '+0') ? `<strong>Bonus: </strong>+${skill.bm}<br>` : ''
+          print += (skill.vs !== '') ? `<strong>Objetivo: </strong>${skill.vs}<br>` : ''
+          print += (skill.range !== '') ? `<strong>Rango: </strong>${skill.range}<br>` : ''
+          print += (skill.pause !== '') ? `<strong>Pausa: </strong>${skill.pause}<br>` : ''
           print += (skill.desc !== '') ? `<strong>Descripción:</strong><br>${skill.desc}<br>` : ''
 
           skillsout += `<div class="js-info">
             <input type="checkbox" name="skills" id="${_pj.name}-skill-${skills[i]}">
             <label class="js-info-link-" for="${_pj.name}-skill-${skills[i]}">${skill.name}</label>
-            <div class="js-info-text-">${print}</div>
+            <div>${print}</div>
           </div>`
         }
       }
@@ -290,14 +303,13 @@ export const pjApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
-          print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
-          print += (item.notes !== '') ? `<strong>Notes:</strong><br> ${item.notes}<br>` : ''
+          print += (item.bd !== '') ? `( ${item.bd} )` : ''
+          print += (item.ba !== '') ? `( ${item.ba} )` : ''
+          // print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
           itemsout += `<div class="js-info">
-            <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-            <label class="js-info-link-" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name}</label>
-            <div class="js-info-text-">${print}</div>
-          </div>`
+            <img src="${item.icon}" height="20"> <strong>${item.name} ${print}</strong>`
+          itemsout += (item.notes !== '') ? `<br>${item.notes}` : ''
+          itemsout += `</div>`
         }
       }
     }

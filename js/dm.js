@@ -47,6 +47,7 @@ export const dmApp = (response) => {
       let database = firebase.database()
       database.ref().child('/campaigns/' + [_data.campaigns.active]).update({ 'bg': this.value })
     })
+    _openConsole()
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
   }
@@ -71,50 +72,54 @@ export const dmApp = (response) => {
 
     for (let pj in pjs) {
       _pj = _data.characters[pj]
-      let _template = document.createElement('div')
-      _template.classList.add('js-template')
-      if (!_pj.visible) _template.classList.add('disabled')
-      _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
-      <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
-      <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
-        <div class="name">
-          <h4><strong>${_pj.name}</strong> <small>(${_pj.class} / ${_pj.race})</small><br>
-            <code>[ <span class="js-edit-attr editable" data-pj="${pj}" data-attr="force" contenteditable="true" title="Físico">${_pj.force}</span> | 
-            <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dex" contenteditable="true" title="Destreza">${_pj.dex}</span> | 
-            <span class="js-edit-attr editable" data-pj="${pj}" data-attr="mind" contenteditable="true" title="Mente">${_pj.mind}</span> ]
-            Def: ${_printDefense()} | 
-            Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / ${_getPV(_pj.force)}</code>
-          </h4>
-        </div>
-        <div class="talent box">
-          <h5>Talento</h5>
-          ${_printTalent()}
-          <div class="js-talent-list">${_talentList(pj)}</div>
-        </div>
-        <div class="skills box">
-          <h5>Habilidades</h5>
-          ${_printSkills(pj)}
-          <div class="js-skill-list">${_skillList(pj)}</div>
-        </div>
-        <div class="items box">
-          <h5>Equipamiento</h5>
-          <p><img src="img/mo.gif"><span class="js-edit-attr editable" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span></p>
-          ${_printItems(pj)}
-          <div class="js-item-list">${_itemList(pj)}</div>
-        </div>
-        <div class="actions">
-          <button class="js-remove-token" data-pj="${pj}">Quitar Token</button>
-          <button class="js-toggle-visible" data-pj="${pj}">Mostrar/Ocultar</button>
-        </div>`
+      let _pjs = _data.campaigns[_data.campaigns.active].pjs
+      let _pnjs = _data.campaigns[_data.campaigns.active].pnjs
+      if (_pjs.indexOf(pj) >= 0 || _pnjs.indexOf(pj) >= 0) {
+        let _template = document.createElement('div')
+        _template.classList.add('js-template')
+        if (!_pj.visible) _template.classList.add('disabled')
+        _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
+        <div class="barra"><div class="vida" style="width:${_barPv()}%"></div></div>
+        <div class="more"><button class="js-more-pj more-pj button button-outline" data-pj="${pj}"></button></div>
+          <div class="name">
+            <h4><strong>${_pj.name}</strong> <small>(${_pj.class} / ${_pj.race})</small><br>
+              <code>[ <span class="js-edit-attr editable" data-pj="${pj}" data-attr="force" contenteditable="true" title="Físico">${_pj.force}</span> | 
+              <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dex" contenteditable="true" title="Destreza">${_pj.dex}</span> | 
+              <span class="js-edit-attr editable" data-pj="${pj}" data-attr="mind" contenteditable="true" title="Mente">${_pj.mind}</span> ]
+              Def: ${_printDefense()} | 
+              Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / ${_getPV(_pj.force)}</code>
+            </h4>
+          </div>
+          <div class="talent box">
+            <h5>Talento</h5>
+            ${_printTalent()}
+            <div class="js-talent-list">${_talentList(pj)}</div>
+          </div>
+          <div class="skills box">
+            <h5>Habilidades</h5>
+            ${_printSkills(pj)}
+            <div class="js-skill-list">${_skillList(pj)}</div>
+          </div>
+          <div class="items box">
+            <h5>Equipamiento</h5>
+            <p><img src="img/mo.gif"><span class="js-edit-attr editable" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span></p>
+            ${_printItems(pj)}
+            <div class="js-item-list">${_itemList(pj)}</div>
+          </div>
+          <div class="actions">
+            <button class="js-remove-token" data-pj="${pj}">Quitar Token</button>
+            <button class="js-toggle-visible" data-pj="${pj}">Mostrar/Ocultar</button>
+          </div>`
 
-      _container.append(_template)
+        _container.append(_template)
 
-      let _mo = document.querySelectorAll('.js-edit-attr')
-      _mo.forEach(item => {
-        item.addEventListener('blur', function () {
-          _setAttr(this.dataset.pj, this.dataset.attr, this.innerHTML)
+        let _mo = document.querySelectorAll('.js-edit-attr')
+        _mo.forEach(item => {
+          item.addEventListener('blur', function () {
+            _setAttr(this.dataset.pj, this.dataset.attr, this.innerHTML)
+          })
         })
-      })
+      }
     }
     let _token = document.querySelectorAll('.js-remove-token')
     _token.forEach(item => {
@@ -205,8 +210,16 @@ export const dmApp = (response) => {
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de vida máximos.`
     } else if (attr === 'extra') {
       database.ref().child('/characters/' + pj).update({ 'extra': val })
+      message = `${_data.characters[pj].name} ahora tiene ${val}.`
     } else if (attr === 'talentLvl') {
       database.ref().child('/characters/' + pj).update({ 'talentLvl': val })
+      message = `${_data.characters[pj].name} ahora tiene rango ${val} de ${_data.characters[pj].talent}.`
+    } else if (attr === 'items') {
+      database.ref().child('/characters/' + pj).update({ 'items': val })
+      message = `${_data.characters[pj].name} ha actualizado su equipamiento.`
+    } else if (attr === 'skills') {
+      database.ref().child('/characters/' + pj).update({ 'skills': val })
+      message = `${_data.characters[pj].name} ha actualizado su magia.`
     }
     saveMessage('dm', message)
   }
@@ -283,9 +296,10 @@ export const dmApp = (response) => {
         let skill = _skills[skills[i].trim()]
         if (typeof skill !== 'undefined') {
           let print = ''
-          print += (skill.bm !== '+0') ? `<strong>Bonus:</strong>${skill.bm}<br>` : ''
-          print += (skill.range !== '') ? `<strong>Rango:</strong>${skill.range}<br>` : ''
-          print += (skill.pause !== '') ? `<strong>Pausa:</strong>${skill.pause}<br>` : ''
+          print += (skill.bm !== '+0') ? `<strong>Bonus: </strong>+${skill.bm}<br>` : ''
+          print += (skill.vs !== '') ? `<strong>Objetivo: </strong>${skill.vs}<br>` : ''
+          print += (skill.range !== '') ? `<strong>Rango: </strong>${skill.range}<br>` : ''
+          print += (skill.pause !== '') ? `<strong>Pausa: </strong>${skill.pause}<br>` : ''
           print += (skill.desc !== '') ? `<strong>Descripción:</strong><br>${skill.desc}<br>` : ''
 
           skillsout += `<div class="js-info">
@@ -343,14 +357,13 @@ export const dmApp = (response) => {
         let item = _items[items[i].trim()]
         if (typeof item !== 'undefined') {
           let print = ''
-          print += (item.bd !== '') ? `<strong>Bonus defensa:</strong> ${item.bd}<br>` : ''
-          print += (item.ba !== '') ? `<strong>Bonus ataque:</strong> ${item.ba}<br>` : ''
-          print += (item.notes !== '') ? `<strong>Notas:</strong> ${item.notes}<br>` : ''
+          print += (item.bd !== '') ? `( ${item.bd} )` : ''
+          print += (item.ba !== '') ? `( ${item.ba} )` : ''
+          // print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
           itemsout += `<div class="js-info">
-            <input type="checkbox" name="items" id="${_pj.name}-item-${items[i]}">
-            <label class="js-info-link" for="${_pj.name}-item-${items[i]}"><img src="${item.icon}" height="20"> ${item.name} <a class="js-item-remove delete button-outline" data-pj="${pj}" data-item="${items[i]}">×</a></label>
-            <div class="js-info-text-">${print}</div>
-          </div>`
+            <img src="${item.icon}" height="20"> <strong>${item.name} ${print}</strong>`
+          itemsout += (item.notes !== '') ? `<br>${item.notes}` : ''
+          itemsout += `</div>`
         }
       }
     }
@@ -515,6 +528,26 @@ export const dmApp = (response) => {
       'text': m
     })
     _chatDraw(pj)
+  }
+
+  const _openConsole = () => {
+    window.addEventListener('keydown', function (e) {
+      e = e || window.event
+      if (e.which == 192) {
+        let res = window.prompt('Comando')
+        res = res.split(' ')
+        let pj = res[0]
+        let attr = res[1]
+        let value = (res[2].indexOf('+') >= 0) 
+          ? _data.characters[pj][attr]*1 + parseInt(res[2]) 
+          : (res[2].indexOf('-') >= 0)
+            ? _data.characters[pj][attr]*1 + parseInt(res[2]) 
+            : (res[2] === 'add')
+              ? _data.characters[pj][attr] + ', ' + res[3]
+              : res[2]
+        _setAttr(pj, attr, value)
+      }
+    })
   }
 
   _init()
