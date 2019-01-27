@@ -93,7 +93,7 @@ export const itemsApp = (response) => {
   const _printItems = () => {
     let itemsout = `<table>
                       </thead>
-                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Hands</th><th>Price</th><th>Type</th><th></th>`
+                        <th></th><th>ID</th><th>Name</th><th>Def</th><th>Dmg</th><th>Notes</th><th>Price</th><th>Type</th><th></th>`
     for (let _item in _items) {
       let item = _items[_item]
       let print = '<tr>'
@@ -117,8 +117,8 @@ export const itemsApp = (response) => {
     let form = `<form action="" class="js-item-form">
     <input type="text" placeholder="Name" data-prop="name" name="name">
     <input type="text" placeholder="Image" data-prop="icon" name="icon">
-    <input type="text" placeholder="Bonus defense" data-prop="def" name="def">
-    <input type="text" placeholder="Bonus attack" data-prop="dmg" name="dmg">
+    <input type="text" placeholder="Bonus defense" data-prop="bd" name="bd">
+    <input type="text" placeholder="Bonus attack" data-prop="ba" name="ba">
     <input type="text" placeholder="Notes" data-prop="notes" name="notes">
     <input type="text" placeholder="Price" data-prop="price" name="price">
     <input type="text" placeholder="Type" data-prop="type" name="type">

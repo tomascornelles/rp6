@@ -359,9 +359,11 @@ export const dmApp = (response) => {
           let print = ''
           print += (item.bd !== '') ? `( ${item.bd} )` : ''
           print += (item.ba !== '') ? `( ${item.ba} )` : ''
+          // print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
           itemsout += `<div class="js-info">
-            <label><img src="${item.icon}" height="20"> ${item.name} ${print}</label>
-          </div>`
+            <img src="${item.icon}" height="20"> <strong>${item.name} ${print}</strong>`
+          itemsout += (item.notes !== '') ? `<br>${item.notes}` : ''
+          itemsout += `</div>`
         }
       }
     }

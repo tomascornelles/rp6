@@ -136,7 +136,9 @@ export const pjApp = (response) => {
 
     for (let pj in pjs) {
       _pj = _data.characters[pj]
-      if (_pj.visible) {
+      let _pjs = _data.campaigns[_data.campaigns.active].pjs
+      let _pnjs = _data.campaigns[_data.campaigns.active].pnjs
+      if (_pj.visible && (_pjs.indexOf(pj) >= 0 || _pnjs.indexOf(pj) >= 0)) {
         let _template = document.createElement('div')
         _template.classList.add('js-template')
         _template.innerHTML = `<div class="img"><img src="img/${pj}.png" alt="${_pj.name}"></img></div>
@@ -304,10 +306,10 @@ export const pjApp = (response) => {
           print += (item.bd !== '') ? `( ${item.bd} )` : ''
           print += (item.ba !== '') ? `( ${item.ba} )` : ''
           // print += (pj === 'pj' && item.ba !== '') ? `<button class="js-use" data-ba="${item.ba.replace('+', '')}">Usar</button>` : ''
-          // print += (item.notes !== '') ? `<strong>Notes:</strong><br> ${item.notes}<br>` : ''
           itemsout += `<div class="js-info">
-            <label><img src="${item.icon}" height="20"> ${item.name} ${print}</label>
-          </div>`
+            <img src="${item.icon}" height="20"> <strong>${item.name} ${print}</strong>`
+          itemsout += (item.notes !== '') ? `<br>${item.notes}` : ''
+          itemsout += `</div>`
         }
       }
     }
