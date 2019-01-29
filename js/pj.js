@@ -44,7 +44,13 @@ export const pjApp = (response) => {
       document.querySelector('.js-page-pj').style.display = 'block'
     })
 
-    document.querySelector('.js-dices').addEventListener('click', function () {
+    document.querySelector('.js-dices-pj').addEventListener('click', function () {
+      let t = Math.ceil(Math.random() * 6)
+      let message = '<img src="img/' + t + '.gif" width="32"> '
+      saveMessage(pj, message)
+    })
+
+    document.querySelector('.js-dices-ft-pj').addEventListener('click', function () {
       let dice = '4'
       let throws = []
       let fate = ['<span class="dado">-</span>', '<span class="dado">&nbsp;</span>', '<span class="dado">+</span>']

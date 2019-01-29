@@ -449,7 +449,8 @@ export const dmApp = (response) => {
     let chatBox = document.createElement('div')
     chatBox.innerHTML = `<form class="js-form">
       <div class="flex">
-        <button class="js-dices button-wide">dados</button>
+        <button class="js-dices-dm button-wide button-red">d6</button>
+        <button class="js-dices-ft-dm button-wide button-blue">df</button>
         ${_itemList()}
         ${_monsterList()}
         ${_roomList()}
@@ -468,7 +469,15 @@ export const dmApp = (response) => {
       saveMessage(pj, message)
       return false
     })
-    document.querySelector('.js-chat-dm .js-dices').addEventListener('click', function () {
+    document.querySelector('.js-dices-dm').addEventListener('click', function () {
+      console.log('<<<')
+      let t = Math.ceil(Math.random() * 6)
+      let message = '<img src="img/' + t + '.gif" width="32"> '
+      console.log('d6'+message)
+      saveMessage(pj, message)
+    })
+    document.querySelector('.js-dices-ft-dm').addEventListener('click', function () {
+      console.log('>>>')
       let dice = '4'
       let throws = []
       let fate = ['<span class="dado">-</span>', '<span class="dado">&nbsp;</span>', '<span class="dado">+</span>']
@@ -481,7 +490,7 @@ export const dmApp = (response) => {
       }
       // let message = throws.sort().reverse()
       let message = (total > 0) ? '+' + total : total
-      console.log(message)
+      console.log('ft' + message)
       saveMessage(pj, `${throws.join(' ')} <b>: ${message}</b>`)
     })
     document.querySelector('.js-chat-dm .js-item-select').addEventListener('change', function () {
