@@ -45,9 +45,20 @@ export const pjApp = (response) => {
     })
 
     document.querySelector('.js-dices').addEventListener('click', function () {
-      let t = Math.ceil(Math.random() * 6)
-      let message = '<img src="img/' + t + '.gif" width="32"> '
-      saveMessage(pj, message)
+      let dice = '4'
+      let throws = []
+      let fate = ['<span class="dado">-</span>', '<span class="dado">&nbsp;</span>', '<span class="dado">+</span>']
+      let total = 0
+      for (let a = 0; a < dice; a++) {
+        let t = Math.floor(Math.random() * 3)
+        total += t - 1
+        // throws.push(' <img src="img/' + t + '.gif" width="32"> ')
+        throws.push(` ${fate[t]} `)
+      }
+      // let message = throws.sort().reverse()
+      let message = (total > 0) ? '+' + total : total
+      console.log(message)
+      saveMessage(pj, `${throws.join(' ')} <b>: ${message}</b>`)
     })
 
     // document.querySelector('.js-salir').setAttribute('href', './logout/' + pj)
