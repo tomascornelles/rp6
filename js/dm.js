@@ -206,7 +206,7 @@ export const dmApp = (response) => {
       database.ref().child('/characters/' + pj).update({ 'mind': val })
       message = `${_data.characters[pj].name} ahora tiene ${val} puntos de mente.`
     } else if (attr === 'dmg') {
-      message = `A ${_data.characters[pj].name} le quedan ${_getPV(_data.characters[pj].force)*1 - val*1} puntos de vida.`
+      message = `A ${_data.characters[pj].name} le quedan ${_getPV(_data.characters[pj].force) * 1 - val * 1} puntos de vida.`
       database.ref().child('/characters/' + pj).update({ 'dmg': val })
     } else if (attr === 'pv') {
       database.ref().child('/characters/' + pj).update({ 'pv': val })
@@ -279,7 +279,7 @@ export const dmApp = (response) => {
   //     : ''
   //   return print
   // }
-  
+
   const _printTalent = (pj) => {
     let print = `<div>
         <p class="js-talent editable" data-pj="${pj}" data-attr="talent" contenteditable="true">${_pj.talent}</p>
@@ -295,17 +295,17 @@ export const dmApp = (response) => {
     return print
   }
 
-  const _talentList = (pj) => {
-    let select = `<select class="js-talent-select" data-pj="${pj}">`
-    select += `<option>Añadir talento</option>`
-    for (const talent in _data.talents) {
-      if (_data.talents.hasOwnProperty(talent)) {
-        select += `<option value="${talent}">${_data.talents[talent].name}</option>`
-      }
-    }
-    select += '</select>'
-    return select
-  }
+  // const _talentList = (pj) => {
+  //   let select = `<select class="js-talent-select" data-pj="${pj}">`
+  //   select += `<option>Añadir talento</option>`
+  //   for (const talent in _data.talents) {
+  //     if (_data.talents.hasOwnProperty(talent)) {
+  //       select += `<option value="${talent}">${_data.talents[talent].name}</option>`
+  //     }
+  //   }
+  //   select += '</select>'
+  //   return select
+  // }
 
   const _addTalent = (pj, i) => {
     let database = firebase.database()
@@ -515,7 +515,7 @@ export const dmApp = (response) => {
     })
     document.querySelector('.js-form .js-monster-select').addEventListener('change', function () {
       let monster = _data.monsters[this.value]
-      let weapon = _items[monster.weapon]
+      // let weapon = _items[monster.weapon]
       let print = ''
       print += (monster.mele !== '0') ? `<span class="dm-only">Melé: ${monster.mele}<br></span>` : ''
       print += (monster.dist !== '0') ? `<span class="dm-only">Distancia: ${monster.dist}<br></span>` : ''
@@ -557,15 +557,15 @@ export const dmApp = (response) => {
   const _openConsole = () => {
     window.addEventListener('keydown', function (e) {
       e = e || window.event
-      if (e.which == 192) {
+      if (e.which === 192) {
         let res = window.prompt('Comando')
         res = res.split(' ')
         let pj = res[0]
         let attr = res[1]
-        let value = (res[2].indexOf('+') >= 0) 
-          ? _data.characters[pj][attr]*1 + parseInt(res[2]) 
+        let value = (res[2].indexOf('+') >= 0)
+          ? _data.characters[pj][attr] * 1 + parseInt(res[2])
           : (res[2].indexOf('-') >= 0)
-            ? _data.characters[pj][attr]*1 + parseInt(res[2]) 
+            ? _data.characters[pj][attr] * 1 + parseInt(res[2])
             : (res[2] === 'add')
               ? _data.characters[pj][attr] + ', ' + res[3]
               : res[2]
