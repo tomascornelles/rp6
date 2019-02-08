@@ -87,24 +87,27 @@ export const dmApp = (response) => {
               <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dex" contenteditable="true" title="Destreza">${_pj.dex}</span> | 
               <span class="js-edit-attr editable" data-pj="${pj}" data-attr="mind" contenteditable="true" title="Mente">${_pj.mind}</span> ]
               Def: ${_printDefense()} | 
-              Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / ${_getPV(_pj.force)}</code>
+              Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr editable" data-pj="${pj}" data-attr="pv" contenteditable="true">${_getPV(_pj.force)}</span>
             </h4>
-          </div>
-          <div class="talent box">
-            <h5>Talento</h5>
-            ${_printTalent()}
-            <div class="js-talent-list">${_talentList(pj)}</div>
-          </div>
-          <div class="skills box">
-            <h5>Habilidades</h5>
-            ${_printSkills(pj)}
-            <div class="js-skill-list">${_skillList(pj)}</div>
           </div>
           <div class="items box">
             <h5>Equipamiento</h5>
             <p><img src="img/mo.gif"><span class="js-edit-attr editable" data-pj="${pj}" data-attr="mo" contenteditable="true">${_pj.mo}</span></p>
             ${_printItems(pj)}
             <div class="js-item-list">${_itemList(pj)}</div>
+          </div>
+          <div class="skills box">
+            <h5>Habilidades</h5>
+            ${_printSkills(pj)}
+            <div class="js-skill-list">${_skillList(pj)}</div>
+          </div>
+          <div class="talent box">
+            <h5>Talento</h5>
+            ${_printTalent(pj)}
+          </div>
+          <div class="weak box">
+            <h5>Debilidad</h5>
+            ${_printWeak(pj)}
           </div>
           <div class="actions">
             <button class="js-remove-token" data-pj="${pj}">Quitar Token</button>
@@ -211,9 +214,15 @@ export const dmApp = (response) => {
     } else if (attr === 'extra') {
       database.ref().child('/characters/' + pj).update({ 'extra': val })
       message = `${_data.characters[pj].name} ahora tiene ${val}.`
+    } else if (attr === 'talent') {
+      database.ref().child('/characters/' + pj).update({ 'talent': val })
+      message = `${_data.characters[pj].name}: ${_data.characters[pj].talent}.`
     } else if (attr === 'talentLvl') {
       database.ref().child('/characters/' + pj).update({ 'talentLvl': val })
-      message = `${_data.characters[pj].name} ahora tiene rango ${val} de ${_data.characters[pj].talent}.`
+      message = `${_data.characters[pj].name} ahora tiene rango ${val} de ${_data.characters[pj].talentLvl}.`
+    } else if (attr === 'weak') {
+      database.ref().child('/characters/' + pj).update({ 'weak': val })
+      message = `${_data.characters[pj].name}: ${_data.characters[pj].weak}.`
     } else if (attr === 'items') {
       database.ref().child('/characters/' + pj).update({ 'items': val })
       message = `${_data.characters[pj].name} ha actualizado su equipamiento.`
@@ -256,18 +265,33 @@ export const dmApp = (response) => {
   }
 
   const _getPV = (f) => {
-    return (10 + 10 * f)
+    return (10 + 2 * f)
   }
 
-  const _printTalent = () => {
-    let talent = _data.talents[_pj.talent]
-    let print = (talent)
-      ? `<div class="js-info">
-        <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
-        <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}, nivel: <span class="js-edit-attr editable" contenteditable="true">${_pj.talentLvl}</span></label>
-        <div class="js-info-text">${talent.desc}</div>
+  // const _printTalent = () => {
+  //   let talent = _data.talents[_pj.talent]
+  //   let print = (talent)
+  //     ? `<div class="js-info">
+  //       <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
+  //       <label class="js-info-link" for="${_pj.name}-talent-${talent}">${talent.name}, nivel: <span class="js-edit-attr editable" contenteditable="true">${_pj.talentLvl}</span></label>
+  //       <div class="js-info-text">${talent.desc}</div>
+  //     </div>`
+  //     : ''
+  //   return print
+  // }
+  
+  const _printTalent = (pj) => {
+    let print = `<div>
+        <p class="js-talent editable" data-pj="${pj}" data-attr="talent" contenteditable="true">${_pj.talent}</p>
+        <p>Rango: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="talentLvl" contenteditable="true">${_pj.talentLvl}</span></p>
       </div>`
-      : ''
+    return print
+  }
+
+  const _printWeak = (pj) => {
+    let print = `<div>
+        <p class="js-edit-attr editable" data-pj="${pj}" data-attr="weak" contenteditable="true">${_pj.weak}</p>
+      </div>`
     return print
   }
 

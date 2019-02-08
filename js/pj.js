@@ -90,10 +90,6 @@ export const pjApp = (response) => {
           </tbody>
         </table>
       </div>
-      <div class="talent box">
-        <h5>Talento</h5>
-        ${_printTalent()}
-      </div>
       <div class="items box">
         <h5>Equipamiento</h5>
         <p><img src="img/mo.gif"><span class="js-mo editable" contenteditable="true">${_pj.mo}</span></p>
@@ -102,6 +98,14 @@ export const pjApp = (response) => {
       <div class="skills box">
         <h5>Hechizos</h5>
         ${_printSkills()}
+      </div>
+      <div class="talent box">
+        <h5>Talento</h5>
+        ${_printTalent()}
+      </div>
+      <div class="weak box">
+        <h5>Debilidad</h5>
+        ${_printWeak()}
       </div>
       `
 
@@ -114,8 +118,14 @@ export const pjApp = (response) => {
     document.querySelector('.js-extraItems').addEventListener('blur', function () {
       _setExtra(pj, this.innerHTML)
     })
+    document.querySelector('.js-talent').addEventListener('blur', function () {
+      _setTalent(pj, this.innerHTML)
+    })
     document.querySelector('.js-talentLvl').addEventListener('blur', function () {
       _setTalentLvl(pj, this.innerHTML)
+    })
+    document.querySelector('.js-weak').addEventListener('blur', function () {
+      _setWeak(pj, this.innerHTML)
     })
     // document.querySelector('.js-use').addEventListener('click', function () {
     //   let t = Math.ceil(Math.random() * 6)
@@ -175,10 +185,6 @@ export const pjApp = (response) => {
               </tbody>
             </table>
           </div>
-          <div class="talent box">
-            <h5>Talento</h5>
-            ${_printTalent()}
-          </div>
           <div class="items box">
             <h5>Equipamiento</h5>
             <p><img src="img/mo.gif"> ${_pj.mo}</p>
@@ -187,6 +193,14 @@ export const pjApp = (response) => {
           <div class="skills box">
             <h5>Hechizos</h5>
             ${_printSkills()}
+          </div>
+          <div class="talent box">
+            <h5>Talento</h5>
+            ${_printTalent()}
+          </div>
+          <div class="weak box">
+            <h5>Debilidad</h5>
+            ${_printWeak()}
           </div>`
         _container.append(_template)
       }
@@ -230,9 +244,19 @@ export const pjApp = (response) => {
     database.ref().child('/characters/' + pj).update({ 'extra': extra })
   }
 
+  const _setTalent = (pj, talent) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'talent': talent })
+  }
+
   const _setTalentLvl = (pj, lvl) => {
     let database = firebase.database()
     database.ref().child('/characters/' + pj).update({ 'talentLvl': lvl })
+  }
+
+  const _setWeak = (pj, weak) => {
+    let database = firebase.database()
+    database.ref().child('/characters/' + pj).update({ 'weak': weak })
   }
 
   const _printDefense = () => {
@@ -256,20 +280,24 @@ export const pjApp = (response) => {
   }
 
   const _getPV = (f) => {
-    return (10 + 10 * f)
+    return (10 + 2 * f)
   }
 
   const _printTalent = () => {
-    let talent = _data.talents[_pj.talent]
-    let print = (talent)
-      ? `<div class="js-info">
-        <input type="checkbox" name="skills" id="${_pj.name}-talent-${talent}">
-        <label class="js-info-link-" for="${_pj.name}-talent-${talent}">${talent.name}, rango: <span class="js-talentLvl editable" contenteditable="true">${_pj.talentLvl}</span></label>
-        <div>${talent.desc}</div>
+    let print = `<div>
+        <p class="js-talent editable" contenteditable="true">${_pj.talent}</p>
+        <p>Rango: <span class="js-talentLvl editable" contenteditable="true">${_pj.talentLvl}</span></p>
       </div>`
-      : ''
     return print
   }
+
+  const _printWeak = () => {
+    let print = `<div>
+        <p class="js-weak editable" contenteditable="true">${_pj.weak}</p>
+      </div>`
+    return print
+  }
+
   const _printSkills = () => {
     let skills = _pj.skills.split(',')
     let skillsout = ''
