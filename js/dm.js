@@ -87,7 +87,7 @@ export const dmApp = (response) => {
               <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dex" contenteditable="true" title="Destreza">${_pj.dex}</span> | 
               <span class="js-edit-attr editable" data-pj="${pj}" data-attr="mind" contenteditable="true" title="Mente">${_pj.mind}</span> ]
               Def: ${_printDefense()} | 
-              Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr editable" data-pj="${pj}" data-attr="pv" contenteditable="true">${_getPV(_pj.force)}</span>
+              Pv: <span class="js-edit-attr editable" data-pj="${pj}" data-attr="dmg" contenteditable="true">${_pj.dmg}</span> / <span class="js-edit-attr editable" data-pj="${pj}" data-attr="pv" contenteditable="true">${_getPV(_pj.force)}</span></code>
             </h4>
           </div>
           <div class="items box">
