@@ -557,7 +557,7 @@ export const dmApp = (response) => {
   const _openConsole = () => {
     window.addEventListener('keydown', function (e) {
       e = e || window.event
-      if (e.which === 192) {
+      if (e.which === 192 || e.which === 226) {
         let res = window.prompt('Comando')
         res = res.split(' ')
         let pj = res[0]
